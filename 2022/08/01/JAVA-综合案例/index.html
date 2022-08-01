@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>Java-综合案例.md | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java-综合案例.md</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 1, 2022&nbsp;&nbsp;15:10:12</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java-综合案例"><a href="#Java-综合案例" class="headerlink" title="Java-综合案例"></a>Java-综合案例</h1><h2 id="案例一：买飞机票"><a href="#案例一：买飞机票" class="headerlink" title="案例一：买飞机票"></a>案例一：买飞机票</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    需求:</span></span><br><span class="line"><span class="comment">//    机票价格按照淡季旺季、头等舱和经济舱收费、输入机票原价、月份和头等舱或经济舱。</span></span><br><span class="line"><span class="comment">//    机票最终优惠价格的计算方案如下：旺季（5-10月）头等舱9折，经济舱8.5折，淡季（11月到来年4月）头等舱7折，经济舱6.5折。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;请输入机票的原价&quot;</span>);</span><br><span class="line">    <span class="type">double</span> <span class="variable">money</span> <span class="operator">=</span> sc.nextDouble();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;请输入机票的月份（1-12）：&quot;</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">month</span> <span class="operator">=</span> sc.nextInt();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;请输入仓位类型：&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">type</span> <span class="operator">=</span> sc.next();</span><br><span class="line"></span><br><span class="line">    System.out.println(calc(money,month,type));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="title function_">calc</span><span class="params">(<span class="type">double</span> money,<span class="type">int</span> month,String type )</span>&#123;</span><br><span class="line">    <span class="comment">//判断用户输入数据的情况</span></span><br><span class="line">    <span class="keyword">if</span>(month &gt;= <span class="number">5</span> &amp;&amp; month &lt;= <span class="number">10</span> )&#123;</span><br><span class="line">        <span class="comment">//旺季</span></span><br><span class="line">        <span class="keyword">switch</span> (type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;头等舱&quot;</span>:</span><br><span class="line">                money*=<span class="number">0.9</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;经济舱&quot;</span>:</span><br><span class="line">                money*=<span class="number">0.85</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                System.out.println(<span class="string">&quot;您输入的仓位有误！&quot;</span>);</span><br><span class="line">                money=-<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (month == <span class="number">11</span> || month == <span class="number">12</span> || month &gt;=<span class="number">1</span> &amp;&amp; month &lt;=<span class="number">4</span>)&#123;</span><br><span class="line">        <span class="keyword">switch</span> (type)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;头等舱&quot;</span>:</span><br><span class="line">                money*=<span class="number">0.7</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;经济舱&quot;</span>:</span><br><span class="line">                money*=<span class="number">0.65</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                System.out.println(<span class="string">&quot;您输入的仓位有误！&quot;</span>);</span><br><span class="line">                money=-<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;您输入的月份有误！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> money;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>遇到判断值匹配的时选择什么结构实现？<ul>
+<li><strong>使用switch分支结构实现。</strong></li>
+</ul>
+</li>
+<li>遇到判断区间范围的时候选择什么结构实现？<ul>
+<li><strong>使用if分支结构实现。</strong></li>
+</ul>
+</li>
+</ol>
+<h2 id="案例二：找素数"><a href="#案例二：找素数" class="headerlink" title="案例二：找素数"></a>案例二：找素数</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//判断101-到200之间有多少素数，并输出</span></span><br><span class="line">    <span class="comment">//除了1和它本身以外，不能被其他正整数整除，就叫素数。</span></span><br><span class="line">    <span class="comment">//分析：</span></span><br><span class="line"><span class="comment">//    101-200之间的数据可以采用循环依次拿到; 每拿到一个数，判断该数是否是素数。</span></span><br><span class="line"><span class="comment">//    判断规则是：从2开始遍历到该数的一半的数据，看是否有数据可以整除它，有则不是素数，没有则是素数。</span></span><br><span class="line"><span class="comment">//    如果最终判定是素数，即可输出展示。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;101-200之间的素数是：&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">101</span>; i &lt;=<span class="number">200</span> ; i++) &#123;</span><br><span class="line">            <span class="comment">//信号位，标记</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">true</span>;<span class="comment">// 一开始认为当前数据是素数</span></span><br><span class="line">            <span class="comment">//判断遍历的当前这个数是否是素数；</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">2</span>; j &lt; i/<span class="number">2</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i % j == <span class="number">0</span>)&#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//根据判定的结果选择是否输出这个数，是素数则输出；</span></span><br><span class="line">            <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">                System.out.print(i+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.本次案例中是如何确定出该数是素数的，具体如何实现？</strong></p>
+<ul>
+<li><p>定义了flag标记位</p>
+</li>
+<li><p>遍历2到该数的一半的数据去判断是否有整除的数据，有则改变falg标记位的状态。</p>
+</li>
+<li><p>最终通过flag的状态判断是否是素数。</p>
+</li>
+</ul>
+<h2 id="案例三：开发验证码"><a href="#案例三：开发验证码" class="headerlink" title="案例三：开发验证码"></a>案例三：开发验证码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    定义方法实现随机产生一个指定位数的验证码，每位可能是数字、大写、小写字母</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    定义一个方法，生成验证码返回：返回值类型是String，需要形参接收位数。</span></span><br><span class="line"><span class="comment">//    在方法内部使用for循环依次生成每位随机字符，并连接起来。</span></span><br><span class="line"><span class="comment">//    把连接好的随机字符作为一组验证码返回。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> createCode(<span class="number">5</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;请输入验证码：&quot;</span>+code);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//1.定义一个方法定义返回值类型，形参</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">createCode</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"><span class="comment">//2.定义一个for循环。循环n次，依次生成随机字符</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line"><span class="comment">//3.生成一个随机字符：英文大写，英文小写，数字——（ 0,1,2）</span></span><br><span class="line">           <span class="type">int</span> <span class="variable">type</span> <span class="operator">=</span> r.nextInt(<span class="number">3</span>);<span class="comment">//0,1,2</span></span><br><span class="line">            <span class="keyword">switch</span> (type)&#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">0</span>:<span class="comment">//大写字符（A65-Z(65+25)）</span></span><br><span class="line">                    <span class="type">char</span> <span class="variable">ch</span> <span class="operator">=</span> (<span class="type">char</span>) r.nextInt(<span class="number">65</span>,<span class="number">91</span>);</span><br><span class="line">                    code += ch;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span>:<span class="comment">//小写字符(a97-z(97+25))</span></span><br><span class="line">                    <span class="type">char</span> ch1= (<span class="type">char</span>) r.nextInt(<span class="number">97</span>,<span class="number">122</span>);</span><br><span class="line">                    code += ch1;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span>:<span class="comment">//数字</span></span><br><span class="line">                    <span class="type">int</span> ch2= r.nextInt(<span class="number">0</span>,<span class="number">10</span>);</span><br><span class="line">                    code += ch2;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.随机验证码的核心实现逻辑是如何进行的？</strong></p>
+<p>​       ①定义一个String类型的变量存储验证码字符。</p>
+<p>​       ②定义一个for循环，循环5次。</p>
+<p>​       ③随机生成0，1，2的数据，依次代表当前位置要生成数字，大写字母，小写字母。</p>
+<p>​       ④把0、1、2交给switch生成对应类型的随机字符，把字符交给String变量。</p>
+<p>​       ⑤循环结束后，返回String类型的变量即是所求的验证码结果。</p>
+<h2 id="案例四：数组元素的复制"><a href="#案例四：数组元素的复制" class="headerlink" title="案例四：数组元素的复制"></a>案例四：数组元素的复制</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    把一个数组中的元素复制到另一个新数组中去。</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    需要动态初始化一个数组，长度与原数组一样。</span></span><br><span class="line"><span class="comment">//    遍历原数组的每个元素，依次赋值给新数组。</span></span><br><span class="line"><span class="comment">//    输出两个数组的内容。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">int</span> [] arr1 = &#123;<span class="number">11</span>,<span class="number">22</span>,<span class="number">33</span>,<span class="number">44</span>,<span class="number">55</span>&#125;;</span><br><span class="line">    <span class="comment">//int[] arr2=arr1;//这样只是把arr1的地址传给了arr2，并不是复制</span></span><br><span class="line">    <span class="type">int</span> [] arr2 =<span class="keyword">new</span> <span class="title class_">int</span>[arr1.length];</span><br><span class="line">    copy(arr1,arr2);</span><br><span class="line">    printArrary(arr1);</span><br><span class="line">    printArrary(arr1);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">printArrary</span><span class="params">(<span class="type">int</span> [] arr)</span>&#123;</span><br><span class="line">    System.out.print(<span class="string">&quot;[&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        System.out.print(arr.length - <span class="number">1</span> == i ? arr[i] : arr[i] + <span class="string">&quot;,&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;]&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">copy</span><span class="params">(<span class="type">int</span> []arr1,<span class="type">int</span> []arr2)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr1.length; i++) &#123;</span><br><span class="line">        arr2 [i]= arr1 [i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.数组的拷贝是什么意思？</strong></p>
+<ul>
+<li>需要创建新数组，把原来数组的元素赋值过来。</li>
+</ul>
+<h2 id="案例五：评委打分"><a href="#案例五：评委打分" class="headerlink" title="案例五：评委打分"></a>案例五：评委打分</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    需求 :</span></span><br><span class="line"><span class="comment">//    在唱歌比赛中，有6名评委给选手打分，分数范围是[0 - 100]之间的整数。选手的最后得分为：去掉最高分、最低分后的4个评委的平均分，请完成上述过程并计算出选手的得分。</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    把6个评委的分数录入到程序中去 ----&gt; 使用数组</span></span><br><span class="line"><span class="comment">//    遍历数组中每个数据，进行累加求和，并找出最高分、最低分。</span></span><br><span class="line"><span class="comment">//    按照分数的计算规则算出平均分。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">int</span> [] scores = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">6</span>];</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; scores.length; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入第&quot;</span> + (i+<span class="number">1</span>) + <span class="string">&quot;个评委的分数:&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">score</span> <span class="operator">=</span> sc.nextInt();</span><br><span class="line">        scores[i] = score;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> scores[<span class="number">0</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">min</span> <span class="operator">=</span> scores[<span class="number">0</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; scores.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (scores[i] &gt; max)&#123;</span><br><span class="line">            max = scores[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (scores[i] &lt; min)&#123;</span><br><span class="line">            min = scores[i];</span><br><span class="line">        &#125;</span><br><span class="line">        sum += scores[i];</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;最高分是：&quot;</span> + max);</span><br><span class="line">    System.out.println(<span class="string">&quot;最低分是：&quot;</span> + min);</span><br><span class="line"></span><br><span class="line">    <span class="type">double</span> <span class="variable">result</span> <span class="operator">=</span> (sum - max -min )/(scores.length-<span class="number">2</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;平均分是：&quot;</span>+result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.如何实现评委打分案例？</strong></p>
+<p>①定义一个动态初始化的数组用于存储分数数据。</p>
+<p>②定义三个变量用于保存最大值、最小值和总和。</p>
+<p>③遍历数组中的每个元素，依次进行统计。</p>
+<p>④遍历结束后按照规则计算出结果即可。</p>
+<h2 id="案例六：数字加密"><a href="#案例六：数字加密" class="headerlink" title="案例六：数字加密"></a>案例六：数字加密</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    某系统的数字密码：比如1983，采用加密方式进行传输，规则如下：先得到每位数，然后每位数都加上5,再对10求余，最后将所有数字反转，得到一串新数。</span></span><br><span class="line"><span class="comment">//    分析</span></span><br><span class="line"><span class="comment">//    将每位数据存入到数组中去，遍历数组每位数据按照规则进行更改，把更改后的数据从新存入到数组中。</span></span><br><span class="line"><span class="comment">//    将数组的前后元素进行交换，数组中的最终元素就是加密后的结果。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//1.定义一个数组，存储需要加密的数字</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    System.out.println(<span class="string">&quot;请输入需要加密多少个数字：&quot;</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span>sc.nextInt();</span><br><span class="line">    <span class="type">int</span> [] arr=<span class="keyword">new</span> <span class="title class_">int</span>[length];</span><br><span class="line">    <span class="comment">//2.录入需要加密的数字</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入第&quot;</span> + (i + <span class="number">1</span>) + <span class="string">&quot;个需要加密的数字&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> sc.nextInt();</span><br><span class="line">        arr [i] = number;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//3.输出数组,查看一下</span></span><br><span class="line">    printArray(arr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//4.对数组的数字进行加密</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        arr[i] = (arr[i]+<span class="number">5</span>)%<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//5.将数组的内容进行前后反转</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>,j = arr.length-<span class="number">1</span>; i &lt; j; i++,j--) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> arr [i];</span><br><span class="line">        arr [i]  = arr [j];</span><br><span class="line">        arr [j]  = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//输出数组查看</span></span><br><span class="line">    printArray(arr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">printArray</span><span class="params">(<span class="type">int</span> [] arr)</span>&#123;</span><br><span class="line">    System.out.print(<span class="string">&quot;[&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        System.out.print((arr.length - <span class="number">1</span> == i ? arr[i] : arr[i] + <span class="string">&quot;,&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;]&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.本次案例中是如何完成数组元素的反转的？</strong></p>
+<p>定义2个变量分别占数组的首尾位置。</p>
+<p>一个变量往前走，一个变量往后走，同步交换双方位置处的值。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/01/JAVA-%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B/">http://example.com/2022/08/01/JAVA-%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/08/01/JAVA-%E6%96%B9%E6%B3%95/">JAVA，方法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
