@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>JAVA-面向对象，构造器，this，封装 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JAVA-面向对象，构造器，this，封装</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 1, 2022&nbsp;&nbsp;15:16:11</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java-面向对象，构造器，this，封装"><a href="#Java-面向对象，构造器，this，封装" class="headerlink" title="Java,面向对象，构造器，this，封装"></a>Java,面向对象，构造器，this，封装</h1><h2 id="一：设计对象，注意事项"><a href="#一：设计对象，注意事项" class="headerlink" title="一：设计对象，注意事项"></a>一：设计对象，注意事项</h2><h3 id="1-设计对象："><a href="#1-设计对象：" class="headerlink" title="1.设计对象："></a>1.设计对象：</h3><p><strong>类设计图</strong>：是对象共同特征的描述； </p>
+<p><strong>对象</strong>：是真实存在的具体实例。  </p>
+<p><strong>结论</strong>：在Java中，必须先设计类，才能创建对象并使用</p>
+<h4 id="案例："><a href="#案例：" class="headerlink" title="案例："></a>案例：</h4><h5 id="1-创建一个student类"><a href="#1-创建一个student类" class="headerlink" title="1.创建一个student类"></a>1.创建一个student类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="comment">//成员变量</span></span><br><span class="line">    String name ;</span><br><span class="line">    <span class="type">double</span> hours ;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">study</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(name+<span class="string">&quot;开始学习了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">time</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;学习了&quot;</span>+hours+<span class="string">&quot;个小时&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-在test中调用Student"><a href="#2-在test中调用Student" class="headerlink" title="2.在test中调用Student"></a>2.在test中调用Student</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//调用创建的类</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">        a.name = <span class="string">&quot;张三&quot;</span>;</span><br><span class="line">        a.hours = <span class="number">4</span>;</span><br><span class="line">        System.out.println(a.name);</span><br><span class="line">        System.out.println(a.hours);</span><br><span class="line">        <span class="comment">//调用类中的方法</span></span><br><span class="line">        a.study();</span><br><span class="line">        a.time();</span><br><span class="line">        System.out.println(<span class="string">&quot;------------------&quot;</span>);</span><br><span class="line">        <span class="comment">//调用创建的类</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">a2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">        a2.name = <span class="string">&quot;李四&quot;</span>;</span><br><span class="line">        a2.hours= <span class="number">5</span>;</span><br><span class="line">        System.out.println(a2.name);</span><br><span class="line">        System.out.println(a2.hours);</span><br><span class="line">        <span class="comment">//调用类中的方法</span></span><br><span class="line">        a2.study();</span><br><span class="line">        a2.time();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-定义类的补充注意事项"><a href="#2-定义类的补充注意事项" class="headerlink" title="2.定义类的补充注意事项:"></a>2.定义类的补充注意事项:</h3><ul>
+<li><p>类名首字母建议大写，且有意义，满足“驼峰模式”。</p>
+</li>
+<li><p>一个Java文件中可以定义多个class类，但<strong>只能一个类</strong>是public修饰，而且public修饰的类名必须成为代码文件名。</p>
+</li>
+<li><p><strong>实际开发中建议还是一个文件定义一个class类。</strong></p>
+</li>
+<li><p>成员变量的完整定义格式是：<strong>修饰符 数据类型 变量名称 &#x3D; 初始化值</strong>； 一般无需指定初始化值，存在默认值。</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据类型</th>
+<th align="center">明细</th>
+<th align="center">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"></td>
+<td align="center">byte、short、char、int、long</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">基本类型</td>
+<td align="center">float、double</td>
+<td align="center">0.0</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">boolean</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">引用类型</td>
+<td align="center">类、接口、数组、String</td>
+<td align="center">null</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h2 id="二：面向对象内存运行机制"><a href="#二：面向对象内存运行机制" class="headerlink" title="二：面向对象内存运行机制"></a>二：面向对象内存运行机制</h2><ol>
+<li>对象到底是放在哪个位置的？</li>
+</ol>
+<ul>
+<li><strong>堆内存中</strong></li>
+</ul>
+<ol start="2">
+<li>Car <strong>c</strong> &#x3D; new Car(); <strong>c变量名中存储的是什么？</strong></li>
+</ol>
+<ul>
+<li>存储的是对象在堆内存中的<strong>地址</strong>。</li>
+</ul>
+<ol start="3">
+<li>成员变量（name、price）的数据放在哪里，存在于哪个位置？</li>
+</ol>
+<ul>
+<li>对象中，存在于堆内存中。</li>
+</ul>
+<h4 id="两个变量指向同一个对象内存图-："><a href="#两个变量指向同一个对象内存图-：" class="headerlink" title="两个变量指向同一个对象内存图 ："></a>两个变量指向同一个对象内存图 ：</h4><p>1.创建一个Student1的类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student1</span> &#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="type">char</span> sex;</span><br><span class="line">    String hobby;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">Study</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;姓名：&quot;</span>+name+<span class="string">&quot;,性别：&quot;</span>+sex+<span class="string">&quot;,爱好：&quot;</span>+hobby+<span class="string">&quot;的学生：开始学习了！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//调用Student1这个类</span></span><br><span class="line">        <span class="type">Student1</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student1</span>();</span><br><span class="line"></span><br><span class="line">        a.name = <span class="string">&quot;李华&quot;</span>;</span><br><span class="line">        a.sex = <span class="string">&#x27;男&#x27;</span>;</span><br><span class="line">        a.hobby = <span class="string">&quot;吃饭，睡觉，学习&quot;</span>;</span><br><span class="line">        <span class="comment">//调用方法</span></span><br><span class="line">        a.Study();</span><br><span class="line">        <span class="comment">//将a的值赋给b，传递的是地址</span></span><br><span class="line">        <span class="type">Student1</span> <span class="variable">b</span> <span class="operator">=</span> a;</span><br><span class="line">        b.hobby = <span class="string">&quot;唱，跳，rap和打篮球&quot;</span>;</span><br><span class="line"></span><br><span class="line">        System.out.println(a.name);</span><br><span class="line">        System.out.println(a.sex);</span><br><span class="line">        System.out.println(a.hobby);</span><br><span class="line"></span><br><span class="line">        a.Study();</span><br><span class="line">        b.Study();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：姓名：李华,性别：男,爱好：吃饭，睡觉，学习的学生：开始学习了！<br>李华<br>男<br>唱，跳，rap和打篮球<br>姓名：李华,性别：男,爱好：唱，跳，rap和打篮球的学生：开始学习了！<br>姓名：李华,性别：男,爱好：唱，跳，rap和打篮球的学生：开始学习了！</p>
+<p><strong>垃圾回收：</strong></p>
+<ul>
+<li>注意：当堆内存中的<strong>对象</strong>，没有被任何变量引用（指向）时，就会被判定为内存中的<strong>“垃圾”。</strong></li>
+</ul>
+<h2 id="三：构造器"><a href="#三：构造器" class="headerlink" title="三：构造器"></a>三：构造器</h2><h3 id="1-构造器的作用："><a href="#1-构造器的作用：" class="headerlink" title="1.构造器的作用："></a>1.<strong>构造器的作用：</strong></h3><ul>
+<li>定义在类中的，可以用于初始化一个类的对象，并返回对象的地址。</li>
+</ul>
+<h3 id="2-构造器的格式："><a href="#2-构造器的格式：" class="headerlink" title="2.构造器的格式："></a>2.<strong>构造器的格式：</strong></h3><ul>
+<li><p>修饰符 类名(形参列表){…}</p>
+</li>
+<li><p>public class Car {…</p>
+<p>​     &#x2F;&#x2F; 无参数构造器</p>
+<p>​    public Car(){…}</p>
+<p>​     &#x2F;&#x2F; 有参数构造器</p>
+<p>​     public Car(String n, double p){…}</p>
+<p> }</p>
+</li>
+</ul>
+<h3 id="3-调用构造器得到对象的格式："><a href="#3-调用构造器得到对象的格式：" class="headerlink" title="3.调用构造器得到对象的格式："></a>3.<strong>调用构造器得到对象的格式：</strong></h3><ul>
+<li><p>类 变量名称 &#x3D; new 构造器；</p>
+</li>
+<li><p>Car c &#x3D; new Car();</p>
+</li>
+<li><p>Car c1 &#x3D; new Car(“奔驰”, 39.8);</p>
+</li>
+</ul>
+<h3 id="4-构造器的分类和作用："><a href="#4-构造器的分类和作用：" class="headerlink" title="4.构造器的分类和作用："></a>4.<strong>构造器的分类和作用：</strong></h3><ul>
+<li><p>无参数构造器（默认存在的）：初始化对象时，成员变量的数据均采用默认值。</p>
+</li>
+<li><p>有参数构造器：在初始化对象的时候，同时可以接收参数为对象进行赋值。</p>
+<h3 id="案例：-1"><a href="#案例：-1" class="headerlink" title="案例："></a>案例：</h3><p>1.创建Car类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="type">double</span> price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Car</span> <span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==调用了无参数构造器==&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Car</span> <span class="params">(String n,<span class="type">double</span> p)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==调用了有参数构造器==&quot;</span>);</span><br><span class="line">        name = n;</span><br><span class="line">        price = p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.调用创建类中的构造器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//调用无参数构造器</span></span><br><span class="line">        <span class="type">Car</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>();</span><br><span class="line">        a.name = <span class="string">&quot;宝马&quot;</span>;</span><br><span class="line">        a.price = <span class="number">30</span>;</span><br><span class="line">        System.out.println(a.name);</span><br><span class="line">        System.out.println(a.price);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//调用有参数构造器</span></span><br><span class="line">        <span class="type">Car</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>(<span class="string">&quot;奔驰&quot;</span>,<span class="number">40</span>);</span><br><span class="line">        System.out.println(b.name);</span><br><span class="line">        System.out.println(b.price);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5-构造器的注意事项"><a href="#5-构造器的注意事项" class="headerlink" title="5.构造器的注意事项"></a>5.构造器的注意事项</h3><ul>
+<li>任何类定义出来，默认就自带了无参数构造器，写不写都有。</li>
+<li>一旦定义了有参数构造器，那么无参数构造器就没有了，如果还想用无参数构造器，此时就需要自己手写一个无参数构造器了。</li>
+</ul>
+<h2 id="四：this-关键字"><a href="#四：this-关键字" class="headerlink" title="四：this 关键字"></a>四：this 关键字</h2><h3 id="1-this关键字是什么？"><a href="#1-this关键字是什么？" class="headerlink" title="1.this关键字是什么？"></a>1.this关键字是什么？</h3><ul>
+<li><p>可以出现在构造器、方法中。</p>
+</li>
+<li><p>代表当前对象的地址。</p>
+</li>
+</ul>
+<h3 id="2-this关键字的作用"><a href="#2-this关键字的作用" class="headerlink" title="2.this关键字的作用"></a>2.this关键字的作用</h3><ul>
+<li>可以用于指定访问当前对象的成员变量、成员方法。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="type">double</span> price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Car</span> <span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==调用了无参数构造器==&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Car</span> <span class="params">(String name,<span class="type">double</span> price)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==调用了有参数构造器==&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.price = price;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-封装"><a href="#五-封装" class="headerlink" title="五.封装"></a>五.封装</h2><h4 id="1-面向对象的三大特征："><a href="#1-面向对象的三大特征：" class="headerlink" title="1.面向对象的三大特征："></a>1.面向对象的三大特征：</h4><p>封装，继承，多态。</p>
+<h4 id="2-封装："><a href="#2-封装：" class="headerlink" title="2.封装："></a>2.封装：</h4><p>告诉我们，如何正确设计对象的属性和方法。</p>
+<h4 id="3-封装的原则："><a href="#3-封装的原则：" class="headerlink" title="3.封装的原则："></a>3.封装的原则：</h4><p>对象代表什么，就得封装对应的数据，并提供数据对应的行为。</p>
+<h4 id="4-封装原则："><a href="#4-封装原则：" class="headerlink" title="4.封装原则："></a>4.封装原则：</h4><p>对象代表什么，就得封装对应的数据，并提供数据对应的行为。 </p>
+<h4 id="5-如何进行封装更好？"><a href="#5-如何进行封装更好？" class="headerlink" title="5.如何进行封装更好？"></a>5.如何进行封装更好？</h4><ul>
+<li><p>一般建议对成员变量使用private(私有、隐藏)关键字修饰进（private修饰的成员只能在当前类中访问）。</p>
+</li>
+<li><p>为每个成员变量提供配套public修饰的的getter、setter方法暴露其取值和赋值。</p>
+</li>
+</ul>
+<h4 id="6-案例："><a href="#6-案例：" class="headerlink" title="6.案例："></a>6.案例：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="comment">//1.成员变量使用private修饰，就只能在这个类中使用了</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.提供成套的setter和getter的方法，暴露其赋值和取值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (age &gt; <span class="number">0</span> &amp;&amp; age &lt;=<span class="number">100</span>)&#123;</span><br><span class="line">            <span class="built_in">this</span>.age = age;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;你输入的年龄有误，请重新输入！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo</span> &#123;</span><br><span class="line">    <span class="comment">//学习如何进行更好的封装</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">        s.setAge(-<span class="number">24</span>);</span><br><span class="line">        System.out.println(s.getAge());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六-JavaBean"><a href="#六-JavaBean" class="headerlink" title="六.JavaBean"></a>六.JavaBean</h2><h3 id="1-JavaBean"><a href="#1-JavaBean" class="headerlink" title="1.JavaBean:"></a>1.JavaBean:</h3><p>也可以称为实体类，其对象可以用于在程序中封装数据。</p>
+<h3 id="2-标准JavaBean须满足如下书写要求："><a href="#2-标准JavaBean须满足如下书写要求：" class="headerlink" title="2.标准JavaBean须满足如下书写要求："></a>2.标准JavaBean须满足如下书写要求：</h3><p>成员变量使用 <strong>private</strong> 修饰。</p>
+<p>提供成员变量对应的 **setXxx() &#x2F;getXxx()**方法。</p>
+<p>必须提供一个<strong>无参构造器；有参数构造器是可写可不写的。</strong></p>
+<h3 id="3-案例："><a href="#3-案例：" class="headerlink" title="3.案例："></a>3.案例：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="comment">//javabean的书写格式，</span></span><br><span class="line">    <span class="comment">//1.使用private修饰成员变量</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> height;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> salary;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3.要求提供无参数构造器，有参数为可选</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//无参数构造器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//有参数构造器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String name, <span class="type">double</span> height, <span class="type">double</span> salary)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.height = height;</span><br><span class="line">        <span class="built_in">this</span>.salary = salary;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.必须为成员变量提供成套的setter和getter方法，可直接快捷生成</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;<span class="keyword">return</span> name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span>&#123;<span class="built_in">this</span>.name = name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getHeight</span><span class="params">()</span>&#123;<span class="keyword">return</span> height;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHeight</span><span class="params">(<span class="type">double</span> height)</span>&#123;<span class="built_in">this</span>.height = height;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getSalary</span><span class="params">()</span>&#123;<span class="keyword">return</span> salary;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSalary</span><span class="params">(<span class="type">double</span> salary)</span>&#123;<span class="built_in">this</span>.salary = salary;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//调用User对象</span></span><br><span class="line">        <span class="comment">//1.无参数构造器创建对象封装一个用户信息</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">u</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        u.setName(<span class="string">&quot;吕布&quot;</span>);</span><br><span class="line">        u.setHeight(<span class="number">185</span>);</span><br><span class="line">        u.setSalary(<span class="number">10000</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;我的名字是：&quot;</span>+u.getName());</span><br><span class="line">        System.out.println(<span class="string">&quot;我的身高是：&quot;</span>+u.getHeight());</span><br><span class="line">        System.out.println(<span class="string">&quot;我的薪水是：&quot;</span>+u.getSalary()+<span class="string">&quot;银元&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;--------------------------------------&quot;</span>);</span><br><span class="line">        <span class="comment">//2.有参数构造器创建对象封装一个用户对象</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">u2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;九江彭于晏&quot;</span>,<span class="number">180</span>,<span class="number">10000</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;我的名字是：&quot;</span>+u2.getName());</span><br><span class="line">        System.out.println(<span class="string">&quot;我的身高是：&quot;</span>+u2.getHeight()+<span class="string">&quot;cm&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;我的薪水是：&quot;</span>+u2.getSalary()+<span class="string">&quot;米&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七-面向对象综合案例"><a href="#七-面向对象综合案例" class="headerlink" title="七.面向对象综合案例"></a>七.面向对象综合案例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Movie</span> &#123;</span><br><span class="line">    <span class="comment">//1.使用private定义成员变量</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> score;</span><br><span class="line">    <span class="keyword">private</span> String actor;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.定义有参数构造器和无参数构造器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movie</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movie</span><span class="params">(String name, <span class="type">double</span> score, String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.score = score;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//3.必须为成员变量提供成套的setter和getter方法</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getScore</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> score;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setScore</span><span class="params">(<span class="type">double</span> score)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.score = score;&#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getActor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> actor;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setActor</span><span class="params">(String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="comment">//目标：完成电影信息的展示案例，理解面向对象编程的代码</span></span><br><span class="line">    <span class="comment">//&quot;《长津湖》&quot;,9.7,&quot;吴京&quot;</span></span><br><span class="line">    <span class="comment">//&quot;《我和我的父亲》&quot;,9.6,&quot;吴京&quot;</span></span><br><span class="line">    <span class="comment">//&quot;《扑水少年》&quot;,9.5,&quot;王川&quot;</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.设计电影类</span></span><br><span class="line">        <span class="comment">//2.创建3个电影对象，封装电影的信息</span></span><br><span class="line">        <span class="comment">//3.定义一个电影类型的数组，将信息存储起来</span></span><br><span class="line">        Movie[] movies= <span class="keyword">new</span> <span class="title class_">Movie</span> [<span class="number">3</span>];</span><br><span class="line">        movies[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《长津湖》&quot;</span>,<span class="number">9.7</span>,<span class="string">&quot;吴京&quot;</span>);</span><br><span class="line">        movies[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《我和我的父亲》&quot;</span>,<span class="number">9.6</span>,<span class="string">&quot;吴京&quot;</span>);</span><br><span class="line">        movies[<span class="number">2</span>] = <span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《扑水少年》&quot;</span>,<span class="number">9.5</span>,<span class="string">&quot;王川&quot;</span>);</span><br><span class="line">        <span class="comment">//4.遍历数组，将其中的数据展示出来</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; movies.length; i++) &#123;</span><br><span class="line">            <span class="type">Movie</span> <span class="variable">m</span> <span class="operator">=</span> movies[i];</span><br><span class="line">            System.out.println(<span class="string">&quot;电影名：&quot;</span>+m.getName());</span><br><span class="line">            System.out.println(<span class="string">&quot;分数：&quot;</span>+m.getScore());</span><br><span class="line">            System.out.println(<span class="string">&quot;主演：&quot;</span>+m.getActor());</span><br><span class="line">            System.out.println(<span class="string">&quot;-----------------------------&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<p>电影名：《长津湖》<br>分数：9.7</p>
+<p>主演：吴京</p>
+<hr>
+<p>电影名：《我和我的父亲》<br>分数：9.6</p>
+<p>主演：吴京</p>
+<hr>
+<p>电影名：《扑水少年》<br>分数：9.5</p>
+<p>主演：王川</p>
+<hr>
+<p><strong>数组中存储的元素并不是对象本身，而是对象的地址。</strong></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/01/JAVA-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%8C%E6%9E%84%E9%80%A0%E5%99%A8%EF%BC%8Cthis%EF%BC%8C%E5%B0%81%E8%A3%85/">http://example.com/2022/08/01/JAVA-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%8C%E6%9E%84%E9%80%A0%E5%99%A8%EF%BC%8Cthis%EF%BC%8C%E5%B0%81%E8%A3%85/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/08/01/JAVA-%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B/">JAVA-综合案例</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
