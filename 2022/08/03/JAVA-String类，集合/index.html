@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>JAVA-String类，集合 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JAVA-String类，集合</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:41:53</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java-String类，集合"><a href="#Java-String类，集合" class="headerlink" title="Java,String类，集合"></a>Java,String类，集合</h1><h2 id="一-String类概述"><a href="#一-String类概述" class="headerlink" title="一.String类概述"></a>一.String类概述</h2><ul>
+<li><p>java.lang.String 类代表字符串，String类定义的变量可以用于指向字符串对象，然后操作该字符串。</p>
+</li>
+<li><p>Java 程序中的所有字符串文字（例如“abc”）都为此类的对象。</p>
+</li>
+<li><p><strong>String其实常被称为不可变字符串类型，它的对象在创建后不能被更改。</strong></p>
+</li>
+<li><p>字符串对象在字符串常量池中存储，以””方式给出的字符串对象。</p>
+</li>
+</ul>
+<ol>
+<li>String是什么，可以做什么？</li>
+</ol>
+<ul>
+<li><p><strong>字符串类型，可以定义字符串变量指向字符串对象。</strong></p>
+<p>2.String是不可变字符串的原因？</p>
+</li>
+<li><p><strong>String变量每次的修改其实都是产生并指向了新的字符串对象。</strong></p>
+</li>
+<li><p><strong>原来的字符串对象都是没有改变的，所以称不可变字符串。</strong></p>
+</li>
+</ul>
+<h2 id="二-String类的常用API-字符串内容比较"><a href="#二-String类的常用API-字符串内容比较" class="headerlink" title="二.String类的常用API-字符串内容比较"></a>二.String类的常用API-字符串内容比较</h2><h4 id="1-字符串的内容比较"><a href="#1-字符串的内容比较" class="headerlink" title="1.字符串的内容比较"></a>1.字符串的内容比较</h4><ul>
+<li>字符串的内容比较不适合用”&#x3D;&#x3D;”比较。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">方法名</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public boolean <strong>equals</strong> (Object anObject)</td>
+<td align="center">将此字符串与指定对象进行比较。只关心字符内容是否一致！</td>
+</tr>
+<tr>
+<td align="center">public boolean <strong>equalsIgnoreCase</strong> (String anotherString)</td>
+<td align="center">将此字符串与指定对象进行比较，忽略大小写比较字符串。只关心字符内容是否一致！</td>
+</tr>
+</tbody></table>
+<ul>
+<li>只关心内容是否一样就使用String提供的equals方法</li>
+<li>基本数据类型比较是一般使用“&#x3D;&#x3D;”。</li>
+</ul>
+<h4 id="2-案例"><a href="#2-案例" class="headerlink" title="2.案例"></a>2.案例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringEqualsDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.正确登陆名和密码</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">okName</span> <span class="operator">=</span> <span class="string">&quot;张飞&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">okPassword</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.输入登陆名称和密码</span></span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入登陆名：&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> sc.next();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入密码：&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> sc.next();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.判断用户输入的登陆名称和密码是否正确</span></span><br><span class="line">        <span class="keyword">if</span>(okName.equals(name) &amp;&amp; okPassword.equals(password))&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;登陆成功！欢迎您回来哟&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;你输入的登录名或者密码有误！请重新输入哦&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//4.忽略内容大小写比较内容的api；一般用于比较验证码这样的逻辑业务</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">code1</span> <span class="operator">=</span> <span class="string">&quot;1WeQr2&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">code2</span> <span class="operator">=</span> <span class="string">&quot;1wEqR2&quot;</span>;</span><br><span class="line">        System.out.println(code1.equals(code2));<span class="comment">//flase</span></span><br><span class="line">        System.out.println(code1.equalsIgnoreCase(code2));<span class="comment">//ture</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-String类常用API-遍历、替换、截取、分割操作"><a href="#三-String类常用API-遍历、替换、截取、分割操作" class="headerlink" title="三.String类常用API-遍历、替换、截取、分割操作"></a>三.String类常用API-遍历、替换、截取、分割操作</h2><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int length()</td>
+<td>返回此字符串的长度</td>
+</tr>
+<tr>
+<td>public char charAt(int index)</td>
+<td>获取某个索引位置处的字符</td>
+</tr>
+<tr>
+<td>public char[] toCharArray()：</td>
+<td>将当前字符串转换成字符数组返回</td>
+</tr>
+<tr>
+<td>public String substring(int beginIndex, int endIndex)</td>
+<td>根据开始和结束索引进行截取，得到新的字符串（包前不包后）</td>
+</tr>
+<tr>
+<td>public String substring(int beginIndex)</td>
+<td>从传入的索引处截取，截取到末尾，得到新的字符串</td>
+</tr>
+<tr>
+<td>public String replace(CharSequence target, CharSequence replacement)</td>
+<td>使用新值，将字符串中的旧值替换，得到新的字符串</td>
+</tr>
+<tr>
+<td>public String[] split(String regex)</td>
+<td>根据传入的规则切割字符串，得到字符串数组返回</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringAPIOtherDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.    public int length()                                         返回此字符串的长度</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> <span class="string">&quot;突然好想你,五月天&quot;</span>;</span><br><span class="line">        System.out.println(s.length());</span><br><span class="line">        <span class="comment">// 2.    public char charAt(int index)                               获取某个索引位置处的字符</span></span><br><span class="line">        <span class="type">char</span> <span class="variable">a</span> <span class="operator">=</span> s.charAt(<span class="number">4</span>);</span><br><span class="line">        System.out.println(a);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------遍历字符串的中的每个字符----------&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            System.out.print(s.charAt(i));</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">// 3.    public char[] toCharArray()：                               将当前字符串转换成字符数组返回</span></span><br><span class="line">        <span class="type">char</span>[] chars = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            <span class="type">char</span> <span class="variable">ch</span> <span class="operator">=</span> chars[i];</span><br><span class="line">            System.out.print(ch+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">// 4.    public String substring(int beginIndex, int endIndex)       根据开始和结束索引进行截取，得到新的字符串（包前不包后）</span></span><br><span class="line">          <span class="type">String</span> <span class="variable">rs</span> <span class="operator">=</span> s.substring(<span class="number">2</span>,<span class="number">5</span>);</span><br><span class="line">          System.out.println(rs);</span><br><span class="line">        <span class="comment">// 5.    public String substring(int beginIndex)                     从传入的索引处截取，截取到末尾，得到新的字符串</span></span><br><span class="line">          <span class="type">String</span> <span class="variable">rs1</span> <span class="operator">=</span> s.substring(<span class="number">6</span>);</span><br><span class="line">        System.out.println(rs1);</span><br><span class="line">        <span class="comment">// 6.    public String replace(CharSequence target, CharSequence replacement) 使用新值，将字符串中的旧值替换，得到新的字符串</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">rs3</span> <span class="operator">=</span> s.replace(<span class="string">&quot;五月天&quot;</span>,<span class="string">&quot;***&quot;</span>);</span><br><span class="line">        System.out.println(rs3);</span><br><span class="line">        <span class="comment">// 7.    public String[] split(String regex)                         根据传入的规则切割字符串，得到字符串数组返回</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">rs4</span> <span class="operator">=</span> <span class="string">&quot;刘备,关羽,张飞&quot;</span>;</span><br><span class="line">        String [] name = rs4.split(<span class="string">&quot;,&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; rs.length(); i++) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;名字是：&quot;</span>+name[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-String案例"><a href="#四-String案例" class="headerlink" title="四.String案例"></a>四.String案例</h2><h4 id="1-String类开发验证码功能"><a href="#1-String类开发验证码功能" class="headerlink" title="1.String类开发验证码功能"></a>1.String类开发验证码功能</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringDemo1</span> &#123;</span><br><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    随机产生一个5位的验证码，每位可能是数字、大写字母、小写字母。</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    定义一个String类型的变量存储验a-zA-Z0-9之间的全部字符。</span></span><br><span class="line"><span class="comment">//    循环5次，随机一个范围内的索引，获取对应字符连接起来即可。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Random</span> <span class="variable">r</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">    <span class="comment">//1.定义可能出现的字符</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">datas</span> <span class="operator">=</span> <span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.循环5次，随机生成一个随机的索引，提取对应的字符连接起来即可</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="comment">//随机生成一个索引</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> r.nextInt(datas.length());</span><br><span class="line">        <span class="type">char</span> <span class="variable">data</span> <span class="operator">=</span> datas.charAt(index);</span><br><span class="line">        code += data;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(code);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-模拟用户登陆功能"><a href="#2-模拟用户登陆功能" class="headerlink" title="2.模拟用户登陆功能"></a>2.模拟用户登陆功能</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringDemo2</span> &#123;</span><br><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    模拟用户登录功能，最多只给三次机会。</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    系统后台定义好正确的登录名称，密码。</span></span><br><span class="line"><span class="comment">//    使用循环控制三次，让用户输入正确的登录名和密码，判断是否登录成功，登录成功则不再进行登录；登录失败给出提示，并让用户继续登录。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//1.定义正确的登录名和密码</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">okLoginName</span> <span class="operator">=</span> <span class="string">&quot;zhangfei&quot;</span>;</span><br><span class="line">    <span class="type">String</span> <span class="variable">okPassword</span>  <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="comment">//2.定义一个循环，循环3次，让用户输入</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++) &#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;请您输入登入名：&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">LoginName</span> <span class="operator">=</span> sc.next();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入您的密码：&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span>  <span class="operator">=</span> sc.next();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.判断是否登陆成功</span></span><br><span class="line">        <span class="keyword">if</span> (okLoginName.equals(LoginName))&#123;</span><br><span class="line">            <span class="keyword">if</span> (okPassword.equals(password))&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;登陆成功！欢迎回来哟~~~&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;您输入的密码有误！请重新输入,您还剩&quot;</span>+(<span class="number">3</span>-i)+<span class="string">&quot;次机会哦~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;您输入的登陆名有误！您还剩&quot;</span>+(<span class="number">3</span>-i)+<span class="string">&quot;次机会哦~~~&quot;</span>);</span><br><span class="line">        &#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-手机号码屏蔽"><a href="#3-手机号码屏蔽" class="headerlink" title="3.手机号码屏蔽"></a>3.手机号码屏蔽</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//键盘录入一个手机号码</span></span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;请输入您的手机号码:&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">tel</span> <span class="operator">=</span> sc.next();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//13349675348</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">before</span> <span class="operator">=</span> tel.substring(<span class="number">0</span>,<span class="number">3</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">after</span> <span class="operator">=</span> tel.substring(<span class="number">7</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> before + <span class="string">&quot;****&quot;</span> + after;</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-集合ArrayList"><a href="#五-集合ArrayList" class="headerlink" title="五.集合ArrayList"></a>五.集合ArrayList</h2><h4 id="1-ArrayList集合"><a href="#1-ArrayList集合" class="headerlink" title="1.ArrayList集合"></a>1.ArrayList集合</h4><ul>
+<li>ArrayList是集合中的一种，它支持索引。</li>
+</ul>
+<p><strong>ArrayList集合的对象的创建</strong></p>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public ArrayList()</td>
+<td>创建一个空的集合对象</td>
+</tr>
+</tbody></table>
+<p><strong>ArrayList集合的添加元素的方法</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean add(E e)</td>
+<td>将指定的元素追加到此集合的末尾</td>
+</tr>
+<tr>
+<td>public void add(int index,E element)</td>
+<td>在此集合中的指定位置插入指定的元素</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayListDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.创建ArrayList的集合对象</span></span><br><span class="line">        <span class="type">ArrayList</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.添加数据</span></span><br><span class="line">        list.add(<span class="number">123</span>);</span><br><span class="line">        list.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;mysql&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&#x27;c&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-ArrayList对于泛型的支持"><a href="#2-ArrayList对于泛型的支持" class="headerlink" title="2.ArrayList对于泛型的支持"></a>2.ArrayList对于泛型的支持</h4><p><strong>泛型概述</strong></p>
+<ul>
+<li>ArrayList<E>：其实就是一个泛型类，可以在编译阶段约束集合对象只能操作某种数据类型。</li>
+</ul>
+<p><strong>举例：</strong></p>
+<ul>
+<li><p>ArrayList<String> ：此集合只能操作字符串类型的元素。</p>
+</li>
+<li><p>ArrayList<Integer>：此集合只能操作整数类型的元素。</p>
+</li>
+</ul>
+<p><strong>泛型只能支持引用数据类型，不支持基本数据类型。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayListDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;String&gt; ar = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        ar.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        ar.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        ar.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        System.out.println(ar);</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;Integer&gt; ar1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        ar1.add(<span class="number">1</span>);</span><br><span class="line">        ar1.add(<span class="number">2</span>);</span><br><span class="line">        ar1.add(<span class="number">3</span>);</span><br><span class="line">        System.out.println(ar1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-ArrayList常用API"><a href="#3-ArrayList常用API" class="headerlink" title="3.ArrayList常用API"></a>3.ArrayList常用API</h4><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int length()</td>
+<td>返回此字符串的长度</td>
+</tr>
+<tr>
+<td>public char charAt(int index)</td>
+<td>获取某个索引位置处的字符</td>
+</tr>
+<tr>
+<td>public char[] toCharArray()：</td>
+<td>将当前字符串转换成字符数组返回</td>
+</tr>
+<tr>
+<td>public String substring(int beginIndex, int endIndex)</td>
+<td>根据开始和结束索引进行截取，得到新的字符串（包前不包后）</td>
+</tr>
+<tr>
+<td>public String substring(int beginIndex)</td>
+<td>从传入的索引处截取，截取到末尾，得到新的字符串</td>
+</tr>
+<tr>
+<td>public String replace(CharSequence target, CharSequence replacement)</td>
+<td>使用新值，将字符串中的旧值替换，得到新的字符串</td>
+</tr>
+<tr>
+<td>public String[] split(String regex)</td>
+<td>根据传入的规则切割字符串，得到字符串数组返回</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayListDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;赵云&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;黄忠&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;马超&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        <span class="comment">//1.     public E get(int  index)          返回指定索引处的元素</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">a</span> <span class="operator">=</span> list.get(<span class="number">2</span>);</span><br><span class="line">        System.out.println(a);</span><br><span class="line">        <span class="comment">//2.     public int  size()                返回集合中的元素的个数</span></span><br><span class="line">        System.out.println(list.size());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.     遍历集合中的数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">            System.out.print(list.get(i)+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">//4.     public E remove(int  index)       删除指定索引处的元素，返回被删除的元素</span></span><br><span class="line">        list.remove(<span class="number">2</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">        <span class="comment">//5.     public boolean remove(Object o)   删除指定的元素，返回删除是否成功</span></span><br><span class="line">        System.out.println(list.remove(<span class="string">&quot;张飞&quot;</span>));</span><br><span class="line">        System.out.println(list);</span><br><span class="line">        <span class="comment">//6.     public E set(int index,E element) 修改指定索引处的元素，返回被修改的元素</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">b</span> <span class="operator">=</span> list.set(<span class="number">1</span>,<span class="string">&quot;诸葛亮&quot;</span>);</span><br><span class="line">        System.out.println(b);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-ArrayList案例"><a href="#五-ArrayList案例" class="headerlink" title="五.ArrayList案例"></a>五.ArrayList案例</h2><h4 id="1-遍历并删除元素值"><a href="#1-遍历并删除元素值" class="headerlink" title="1.遍历并删除元素值"></a>1.遍历并删除元素值</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayListDemo4</span> &#123;</span><br><span class="line"><span class="comment">//    需求：</span></span><br><span class="line"><span class="comment">//    某个班级的考试在系统上进行，成绩大致为：98, 77, 66, 89, 79, 50, 100</span></span><br><span class="line"><span class="comment">//    现在需要先把成绩低于80分以下的数据去掉。</span></span><br><span class="line"><span class="comment">//    分析：</span></span><br><span class="line"><span class="comment">//    定义ArrayList集合存储多名学员的成绩。</span></span><br><span class="line"><span class="comment">//    遍历集合每个元素，如果元素值低于80分，去掉它。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; scores = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">        scores.add(<span class="number">90</span>);</span><br><span class="line">        scores.add(<span class="number">32</span>);</span><br><span class="line">        scores.add(<span class="number">95</span>);</span><br><span class="line">        scores.add(<span class="number">100</span>);</span><br><span class="line">        scores.add(<span class="number">50</span>);</span><br><span class="line">        scores.add(<span class="number">70</span>);</span><br><span class="line">        scores.add(<span class="number">60</span>);</span><br><span class="line">        scores.add(<span class="number">80</span>);</span><br><span class="line">        scores.add(<span class="number">70</span>);</span><br><span class="line">        System.out.println(scores);</span><br><span class="line">        <span class="comment">//遍历集合</span></span><br><span class="line">        <span class="comment">//方案一</span></span><br><span class="line">        <span class="comment">/*for (int i = 0; i &lt; scores.size(); i++) &#123;</span></span><br><span class="line"><span class="comment">            Integer a = scores.get(i);</span></span><br><span class="line"><span class="comment">            if (a &lt; 80)&#123;</span></span><br><span class="line"><span class="comment">                scores.remove(a);</span></span><br><span class="line"><span class="comment">                i--;// 删除成功后往后退一步，这样就不会跳过数据了</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        System.out.println(scores);*/</span></span><br><span class="line">        <span class="comment">//方案二：倒着遍历</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> scores.size()-<span class="number">1</span>; i &gt;= <span class="number">0</span> ; i--) &#123;</span><br><span class="line">            <span class="keyword">if</span> (scores.get(i) &lt; <span class="number">80</span>)&#123;</span><br><span class="line">                scores.remove(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(scores);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-影片信息在程序中的表示"><a href="#2-影片信息在程序中的表示" class="headerlink" title="2.影片信息在程序中的表示"></a>2.影片信息在程序中的表示</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayListDemo5</span> &#123;</span><br><span class="line"><span class="comment">//    需求</span></span><br><span class="line"><span class="comment">//    某影院系统需要在后台存储上述三部电影，然后依次展示出来。</span></span><br><span class="line"><span class="comment">//    分析</span></span><br><span class="line"><span class="comment">//    定义一个电影类，定义一个集合存储电影对象。</span></span><br><span class="line"><span class="comment">//    创建3个电影对象，封装相关数据，把3个对象存入到集合中去。</span></span><br><span class="line"><span class="comment">//    遍历集合中的3个对象，输出相关信息。</span></span><br><span class="line">    <span class="comment">//《肖申克的救赎》，9.7，罗宾斯</span></span><br><span class="line">    <span class="comment">//《霸王别姬》，9.6，张国荣，张丰毅</span></span><br><span class="line">    <span class="comment">//《阿甘正传》，9.5，汤姆汉克斯</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    ArrayList&lt;Movies&gt; movie = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">Movies</span> <span class="variable">m1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Movies</span>(<span class="string">&quot;《肖申克的救赎》&quot;</span>,<span class="number">9.7</span>,<span class="string">&quot;罗宾斯&quot;</span>);</span><br><span class="line">    <span class="type">Movies</span> <span class="variable">m2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Movies</span>(<span class="string">&quot;《霸王别姬》&quot;</span>,<span class="number">9.6</span>,<span class="string">&quot;张国荣，张丰毅&quot;</span>);</span><br><span class="line">    <span class="type">Movies</span> <span class="variable">m3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Movies</span>(<span class="string">&quot;《阿甘正传》&quot;</span>,<span class="number">9.5</span>,<span class="string">&quot;汤姆汉克斯&quot;</span>);</span><br><span class="line">    movie.add(m1);</span><br><span class="line">    movie.add(m2);</span><br><span class="line">    movie.add(m3);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; movie.size(); i++) &#123;</span><br><span class="line">        <span class="type">Movies</span> <span class="variable">a</span> <span class="operator">=</span> movie.get(i);</span><br><span class="line">        System.out.println(<span class="string">&quot;电影名称：&quot;</span>+a.getName());</span><br><span class="line">        System.out.println(<span class="string">&quot;电影分数：&quot;</span>+a.getScore());</span><br><span class="line">        System.out.println(<span class="string">&quot;电影主演：&quot;</span>+a.getActor());</span><br><span class="line">        System.out.println(<span class="string">&quot;--------------------------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Movies</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> score;</span><br><span class="line">    <span class="keyword">private</span> String actor;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movies</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movies</span><span class="params">(String name, <span class="type">double</span> score, String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.score = score;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getScore</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setScore</span><span class="params">(<span class="type">double</span> score)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getActor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> actor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setActor</span><span class="params">(String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>集合中存储的元素并不是对象本身，而是对象的地址。</strong></p>
+<h2 id="六-学生信息系统的数据搜索"><a href="#六-学生信息系统的数据搜索" class="headerlink" title="六.学生信息系统的数据搜索"></a>六.学生信息系统的数据搜索</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SearchStudent</span> &#123;</span><br><span class="line"><span class="comment">//    需求</span></span><br><span class="line"><span class="comment">//    后台程序需要存储如上学生信息并展示，然后要提供按照学号搜索学生信息的功能。</span></span><br><span class="line"><span class="comment">//    分析</span></span><br><span class="line"><span class="comment">//    定义Student类，定义ArrayList集合存储如上学生对象信息，并遍历展示出来。</span></span><br><span class="line"><span class="comment">//    提供一个方法，可以接收ArrayList集合，和要搜索的学号，返回搜索到的学生对象信息，并展示。</span></span><br><span class="line"><span class="comment">//    使用死循环，让用户可以不停的搜索。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//1.将信息存入集合中</span></span><br><span class="line">    ArrayList&lt;Student&gt; students = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    students.add(<span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;20221&quot;</span>,<span class="string">&quot;刘备&quot;</span>,<span class="number">27</span>,<span class="string">&quot;战前训导&quot;</span>));</span><br><span class="line">    students.add(<span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;20222&quot;</span>,<span class="string">&quot;关羽&quot;</span>,<span class="number">26</span>,<span class="string">&quot;二弟天下无敌&quot;</span>));</span><br><span class="line">    students.add(<span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;20223&quot;</span>,<span class="string">&quot;张飞&quot;</span>,<span class="number">25</span>,<span class="string">&quot;三弟脸很黑&quot;</span>));</span><br><span class="line">    students.add(<span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;20220&quot;</span>,<span class="string">&quot;诸葛亮&quot;</span>,<span class="number">30</span>,<span class="string">&quot;光环效果：奥术智慧&quot;</span>));</span><br><span class="line">    <span class="comment">//2.遍历集合</span></span><br><span class="line">    System.out.println(<span class="string">&quot;学号\t名字\t年龄\t效果&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; students.size(); i++) &#123;</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> students.get(i);</span><br><span class="line">        System.out.println(s.getStudentNumber()+<span class="string">&quot;\t&quot;</span>+s.getName()+<span class="string">&quot;\t&quot;</span>+s.getAge()+<span class="string">&quot;\t&quot;</span>+s.getClassName());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//定义一个扫描器</span></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入您要查询的学号：&quot;</span>);</span><br><span class="line">        String studyNumber= sc.next();</span><br><span class="line">        <span class="comment">//调用方法查询</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> getStudentByid(students,studyNumber);</span><br><span class="line">        <span class="comment">//判断s中是否存在学生对象地址</span></span><br><span class="line">        <span class="keyword">if</span> (s == <span class="literal">null</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;查无此人！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;您查询的学生信息如下：&quot;</span>);</span><br><span class="line">            System.out.println(s.getStudentNumber()+<span class="string">&quot;\t&quot;</span>+s.getName()+<span class="string">&quot;\t&quot;</span>+s.getAge()+<span class="string">&quot;\t&quot;</span>+s.getClassName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//3.定义一个方法完成搜索学号功能</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据学生的学号查询学生返回对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> students 存储全部学生对象的集合</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> studyNumber 搜素学生的学号</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 学生对象 | null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Student <span class="title function_">getStudentByid</span><span class="params">(ArrayList&lt;Student&gt; students,String studyNumber)</span>&#123;</span><br><span class="line">        <span class="comment">//1.遍历集合中的元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; students.size(); i++) &#123;</span><br><span class="line">            <span class="comment">//2.判断遍历的学号是否与我们输入的学号相同</span></span><br><span class="line">            <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> students.get(i);</span><br><span class="line">            <span class="keyword">if</span> (s.getStudentNumber().equals(studyNumber))&#123;</span><br><span class="line">                <span class="comment">//代表这个就是我们要找的学生对象</span></span><br><span class="line">                <span class="keyword">return</span> s;</span><br><span class="line">            &#125;</span><br><span class="line">            &#125;<span class="comment">//查无此人</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String studentNumber;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String className;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String studentNumber, String name, <span class="type">int</span> age, String className)</span> &#123;<span class="built_in">this</span>.studentNumber = studentNumber;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">        <span class="built_in">this</span>.className = className;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getStudentNumber</span><span class="params">()</span> &#123; <span class="keyword">return</span> studentNumber;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setStudentNumber</span><span class="params">(String studentNumber)</span> &#123;<span class="built_in">this</span>.studentNumber = studentNumber; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;<span class="keyword">return</span> name; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123; <span class="built_in">this</span>.name = name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;<span class="keyword">return</span> age;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123; <span class="built_in">this</span>.age = age;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getClassName</span><span class="params">()</span> &#123;<span class="keyword">return</span> className; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setClassName</span><span class="params">(String className)</span> &#123;<span class="built_in">this</span>.className = className;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/JAVA-String%E7%B1%BB%EF%BC%8C%E9%9B%86%E5%90%88/">http://example.com/2022/08/03/JAVA-String%E7%B1%BB%EF%BC%8C%E9%9B%86%E5%90%88/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E9%98%B6%E6%AE%B5%E6%A1%88%E4%BE%8B%EF%BC%9AATM/">ATM案例</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/01/JAVA-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%8C%E6%9E%84%E9%80%A0%E5%99%A8%EF%BC%8Cthis%EF%BC%8C%E5%B0%81%E8%A3%85/">JAVA-面向对象，构造器，this，封装</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

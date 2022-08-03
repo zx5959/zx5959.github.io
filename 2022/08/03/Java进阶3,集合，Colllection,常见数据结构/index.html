@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java集合，Collection，常见数据结构，list集合，泛型 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java集合，Collection，常见数据结构，list集合，泛型</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:48:39</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java集合，Collection，常见数据结构，list集合，泛型"><a href="#Java集合，Collection，常见数据结构，list集合，泛型" class="headerlink" title="Java集合，Collection，常见数据结构，list集合，泛型"></a>Java集合，Collection，常见数据结构，list集合，泛型</h1><h2 id="一-集合的体系特点"><a href="#一-集合的体系特点" class="headerlink" title="一.集合的体系特点"></a>一.<strong>集合的体系特点</strong></h2><p><strong>数组的特点</strong></p>
+<ul>
+<li><p>数组定义完成并启动后，<strong>类型确定、长度固定</strong>。</p>
+</li>
+<li><p>不适合元素的个数和类型不确定的业务场景，更不适合做需要增删数据操作。</p>
+</li>
+<li><p>数组的功能也比较的单一，处理数据的能力并不是很强大。</p>
+</li>
+</ul>
+<p><strong>集合的特点</strong></p>
+<ul>
+<li><p>集合的大小不固定，启动后可以动态变化，类型也可以选择不固定。集合更像气球。</p>
+</li>
+<li><p>集合非常适合元素个数不能确定，且需要做元素的增删操作的场景。</p>
+</li>
+<li><p>同时，集合提供的种类特别的丰富，功能也是非常强大的，开发中集合用的更多。</p>
+</li>
+</ul>
+<p><strong>集合类体系结构</strong></p>
+<ul>
+<li><p>Collection单列集合，每个元素（数据）只包含一个值。</p>
+</li>
+<li><p>Map双列集合，每个元素包含两个值（键值对）。</p>
+</li>
+</ul>
+<p><strong>Collection</strong>集合特点</p>
+<p><strong>List系列集合</strong>：添加的元素是有序、可重复、有索引。</p>
+<ul>
+<li>ArrayList、LinekdList ：有序、可重复、有索引。</li>
+</ul>
+<p><strong>Set系列集合</strong>：添加的元素是无序、不重复、无索引。</p>
+<ul>
+<li><p>HashSet: 无序、不重复、无索引；LinkedHashSet: <strong>有序</strong>、不重复、无索引。</p>
+</li>
+<li><p>TreeSet：<strong>按照大小默认升序排序、</strong>不重复、无索引。</p>
+</li>
+</ul>
+<p><strong>泛型</strong></p>
+<ul>
+<li><em><strong>集合都是泛型的形式，可以在编译阶段约束集合只能操作某种数据类型</strong></em></li>
+</ul>
+<p>Collection<String> lists &#x3D; new ArrayList<String>();<br>Collection<String> lists &#x3D; new ArrayList&lt;&gt;(); &#x2F;&#x2F; JDK 1.7开始后面的泛型类型申明可以省略不写</p>
+<p><strong>注意：集合和泛型都只能支持引用数据类型，不支持基本数据类型，所以集合中存储的元素都认为是对象。</strong></p>
+<p><em>&#x2F;&#x2F;</em> 存储基本类型使用包装类<br>Collection<Integer> lists &#x3D; new ArrayList&lt;&gt;();</p>
+<p>Collection<Double> lists &#x3D; new ArrayList&lt;&gt;();</p>
+<h2 id="二-Collection集合的常用API"><a href="#二-Collection集合的常用API" class="headerlink" title="二.Collection集合的常用API"></a>二.Collection集合的常用API</h2><ul>
+<li>Collection是单列集合的祖宗接口，它的功能是全部单列集合都可以继承使用的。</li>
+</ul>
+<h3 id="1-Collection-API如下"><a href="#1-Collection-API如下" class="headerlink" title="1.Collection API如下:"></a>1.<strong>Collection API如下:</strong></h3><table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  boolean add(E e)</td>
+<td>把给定的对象添加到当前集合中</td>
+</tr>
+<tr>
+<td>public  void clear()</td>
+<td>清空集合中所有的元素</td>
+</tr>
+<tr>
+<td>public  boolean remove(E e)</td>
+<td>把给定的对象在当前集合中删除</td>
+</tr>
+<tr>
+<td>public  boolean contains(Object obj)</td>
+<td>判断当前集合中是否包含给定的对象</td>
+</tr>
+<tr>
+<td>public  boolean isEmpty()</td>
+<td>判断当前集合是否为空</td>
+</tr>
+<tr>
+<td>public  int size()</td>
+<td>返回集合中元素的个数。</td>
+</tr>
+<tr>
+<td>public  Object[] toArray()</td>
+<td>把集合中的元素，存储到数组中</td>
+</tr>
+</tbody></table>
+<h3 id="2-实际运用："><a href="#2-实际运用：" class="headerlink" title="2.实际运用："></a>2.实际运用：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CollectionAPIDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Collection&lt;String&gt; c = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">//1.添加元素，添加成功返回true</span></span><br><span class="line">        c.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;HTML&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;HTML&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;MySQL&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        System.out.println(c);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.清空集合的元素</span></span><br><span class="line"><span class="comment">//        c.clear();</span></span><br><span class="line"><span class="comment">//        System.out.println(c);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.判断集合是否为空，是空返回true,反之</span></span><br><span class="line">        System.out.println(c.isEmpty());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.获取集合的大小</span></span><br><span class="line">        System.out.println(c.size());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//5.判断集合中是否包含某个元素</span></span><br><span class="line">        System.out.println(c.contains(<span class="string">&quot;Java&quot;</span>)); <span class="comment">// true</span></span><br><span class="line">        System.out.println(c.contains(<span class="string">&quot;诸葛亮&quot;</span>));<span class="comment">// false</span></span><br><span class="line">        System.out.println(c.contains(<span class="string">&quot;MySQL&quot;</span>));<span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//6.删除某个元素：如果有更多个重复元素默认删除前面的第一个！</span></span><br><span class="line">        System.out.println(c.remove(<span class="string">&quot;java&quot;</span>));<span class="comment">//false</span></span><br><span class="line">        System.out.println(c);</span><br><span class="line">        System.out.println(c.remove(<span class="string">&quot;Java&quot;</span>));<span class="comment">//true</span></span><br><span class="line">        System.out.println(c);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//7.把集合转换成数组 [HTML, HTML, MySQL, Java, 张飞, Java]</span></span><br><span class="line">        Object[] arrs = c.toArray();</span><br><span class="line">        System.out.println(<span class="string">&quot;数组：&quot;</span> + Arrays.toString(arrs));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;=================================&quot;</span>);</span><br><span class="line">        Collection&lt;String&gt; c1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        c1.add(<span class="string">&quot;java1&quot;</span>);</span><br><span class="line">        c1.add(<span class="string">&quot;java2&quot;</span>);</span><br><span class="line">        Collection&lt;String&gt; c2 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        c2.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        c2.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        <span class="comment">//addAll把c2集合的元素全部放入c1中去</span></span><br><span class="line">        c1.addAll(c2);</span><br><span class="line">        System.out.println(c1);</span><br><span class="line">        System.out.println(c2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-Collection集合的遍历方式"><a href="#三-Collection集合的遍历方式" class="headerlink" title="三.Collection集合的遍历方式"></a>三.Collection集合的遍历方式</h2><h3 id="1-方式一：迭代器，Iterator"><a href="#1-方式一：迭代器，Iterator" class="headerlink" title="1.方式一：迭代器，Iterator"></a>1.方式一：迭代器，Iterator</h3><p><strong>迭代器遍历概述</strong></p>
+<ul>
+<li><p>遍历就是一个一个的把容器中的元素访问一遍。 </p>
+</li>
+<li><p>迭代器在Java中的代表是<strong>Iterator</strong>，迭代器是集合的专用的遍历方式。</p>
+</li>
+</ul>
+<p><strong>Collection</strong>集合获取迭代器</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Iterator<E></strong>  <strong>iterator()</strong></td>
+<td>返回集合中的迭代器对象，该迭代器对象默认指向当前集合的0索引</td>
+</tr>
+</tbody></table>
+<p><strong>Iterator</strong>中的常用方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean hasNext()</td>
+<td>询问当前位置是否有元素存在，存在返回true ,不存在返回false</td>
+</tr>
+<tr>
+<td>E  next()</td>
+<td>获取当前位置的元素，并同时将迭代器对象移向下一个位置，注意防止取出越界。</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CollectionDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Collection&lt;String&gt; lists = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        lists.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;卧龙&quot;</span>);</span><br><span class="line">        System.out.println(lists);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.得到当前集合的迭代器对象</span></span><br><span class="line">        Iterator&lt;String&gt; it = lists.iterator();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.定义while循环</span></span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ele</span> <span class="operator">=</span> it.next();</span><br><span class="line">            System.out.println(ele);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>迭代器如果取元素越界会出现<strong>NoSuchElementException</strong>异常。</p>
+<h3 id="2-方式二：foreach-x2F-增强for循环"><a href="#2-方式二：foreach-x2F-增强for循环" class="headerlink" title="2.方式二：foreach&#x2F;增强for循环"></a>2.方式二：foreach&#x2F;增强for循环</h3><p><strong>增强for循环</strong></p>
+<p>for(元素数据类型 变量名 : 数组或者Collection集合) {</p>
+<p>​     &#x2F;&#x2F;在此处使用变量即可，该变量就是元素}</p>
+<ul>
+<li>增强for循环：<em><strong>既可以遍历集合也可以遍历数组</strong></em></li>
+</ul>
+<p>例子：</p>
+<p>Collection<String> list &#x3D; new ArrayList&lt;&gt;();<br> …<br> for(String ele : list) {<br>   System.<em>out</em>.println(ele);<br> }</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CollectionDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Collection&lt;String&gt; lists = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        lists.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;卧龙&quot;</span>);</span><br><span class="line">        System.out.println(lists);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (String list : lists) &#123;</span><br><span class="line">            System.out.println(list);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;======================&quot;</span>);</span><br><span class="line">        <span class="type">double</span>[] scores = &#123;<span class="number">100</span>, <span class="number">99</span>, <span class="number">45</span>, <span class="number">56</span>, <span class="number">56.8</span>&#125;;</span><br><span class="line">        System.out.println(Arrays.toString(scores));</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">double</span> score : scores) &#123;</span><br><span class="line">            System.out.println(score);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-方式三：Lambda表达式"><a href="#3-方式三：Lambda表达式" class="headerlink" title="3.方式三：Lambda表达式"></a>3.方式三：Lambda表达式</h3><p><strong>Lambda表达式遍历集合</strong></p>
+<ul>
+<li>得益于JDK 8开始的新技术Lambda表达式，提供了一种更简单，更直接的遍历集合的方式</li>
+</ul>
+<p><strong>Collection</strong>结合Lambda遍历的API</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>default void forEach(Consumer&lt;? super T&gt; action):</td>
+<td>结合lambda遍历集合</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CollectionDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Collection&lt;String&gt; lists = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        lists.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        lists.add(<span class="string">&quot;卧龙&quot;</span>);</span><br><span class="line">        System.out.println(lists);</span><br><span class="line"></span><br><span class="line"><span class="comment">//        lists.forEach(new Consumer&lt;String&gt;() &#123;</span></span><br><span class="line"><span class="comment">//            @Override</span></span><br><span class="line"><span class="comment">//            public void accept(String s) &#123;</span></span><br><span class="line"><span class="comment">//                System.out.println(s);</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;);</span></span><br><span class="line"></span><br><span class="line">        lists.forEach( s -&gt; &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line"><span class="comment">//        lists.forEach( s -&gt; System.out.println(s));</span></span><br><span class="line">        <span class="comment">//Lambda简化形式</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-Collection集合存储自定义类型的对象"><a href="#四-Collection集合存储自定义类型的对象" class="headerlink" title="四.Collection集合存储自定义类型的对象"></a>四.Collection集合存储自定义类型的对象</h2><h3 id="1-案例：影片信息在程序中的表示"><a href="#1-案例：影片信息在程序中的表示" class="headerlink" title="1.案例：影片信息在程序中的表示"></a>1.案例：影片信息在程序中的表示</h3><p><strong>需求</strong></p>
+<p>某影院系统需要在后台存储上述三部电影，然后依次展示出来。</p>
+<p><strong>分析</strong></p>
+<p>①：定义一个电影类，定义一个集合存储电影对象。</p>
+<p>②：创建3个电影对象，封装相关数据，把3个对象存入到集合中去。</p>
+<p>③：遍历集合中的3个对象，输出相关信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Movie</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> score;</span><br><span class="line">    <span class="keyword">private</span> String actor;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movie</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Movie</span><span class="params">(String name, <span class="type">double</span> score, String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.score = score;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getScore</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setScore</span><span class="params">(<span class="type">double</span> score)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getActor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> actor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setActor</span><span class="params">(String actor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.actor = actor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.定义一个电影类</span></span><br><span class="line">        <span class="comment">//2.定义一个集合对象存储3部电影对象</span></span><br><span class="line">        Collection&lt;Movie&gt; movies = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        movies.add(<span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《你好，李焕英》&quot;</span>,<span class="number">9.5</span>,<span class="string">&quot;张小雯，贾玲，沈腾，陈赫&quot;</span>));</span><br><span class="line">        movies.add(<span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《唐人街探案》&quot;</span>,<span class="number">8.5</span>,<span class="string">&quot;王宝强，刘昊然，机车大汉&quot;</span>));</span><br><span class="line">        movies.add(<span class="keyword">new</span> <span class="title class_">Movie</span>(<span class="string">&quot;《刺杀小说家》&quot;</span>,<span class="number">8.6</span>,<span class="string">&quot;雷佳音，杨幂&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.遍历集合容器中的每一个电影对象</span></span><br><span class="line">        <span class="keyword">for</span> (Movie movie : movies) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;电影名：&quot;</span>+movie.getName());</span><br><span class="line">            System.out.println(<span class="string">&quot;评分：&quot;</span>+movie.getScore());</span><br><span class="line">            System.out.println(<span class="string">&quot;演员：&quot;</span>+movie.getActor());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>集合中存储的是元素对象的地址</strong></li>
+</ul>
+<h2 id="五-常见数据结构"><a href="#五-常见数据结构" class="headerlink" title="五.常见数据结构"></a>五.常见数据结构</h2><h3 id="1-数据结构概述，栈，队列"><a href="#1-数据结构概述，栈，队列" class="headerlink" title="1.数据结构概述，栈，队列"></a>1.数据结构概述，栈，队列</h3><ul>
+<li><p><strong>栈</strong>：先进后出，后进先出</p>
+</li>
+<li><p><strong>队列</strong>：先进先出，后进后出</p>
+</li>
+</ul>
+<h3 id="2-数组"><a href="#2-数组" class="headerlink" title="2.数组"></a>2.数组</h3><ul>
+<li><strong>查询速度快：</strong>查询数据通过地址值和索引定位，查询任意数据耗时相同<strong>。</strong>（元素在内存中是连续存储的）</li>
+<li><strong>删除效率低：</strong>要将原始数据删除，同时后面每个数据前移。</li>
+<li><strong>添加效率极低：</strong>添加位置后的每个数据后移，再添加元素。</li>
+</ul>
+<h3 id="3-链表"><a href="#3-链表" class="headerlink" title="3.链表"></a>3.链表</h3><p><strong>链表的特点：</strong></p>
+<ul>
+<li>链表中的元素是在内存中不连续存储的，每个元素节点包含数据值和下一个元素的地址。</li>
+<li><strong>链表查询慢。无论查询哪个数据都要从头开始找</strong></li>
+<li><strong>链表增删相对快</strong></li>
+<li>单向，双向链表</li>
+</ul>
+<h3 id="4-二叉树，二叉查找树"><a href="#4-二叉树，二叉查找树" class="headerlink" title="4.二叉树，二叉查找树"></a>4.二叉树，二叉查找树</h3><p><strong>二叉树的特点</strong></p>
+<ul>
+<li><p><strong>只能有一个根节点</strong>，每个节点最多支持2个直接子节点。</p>
+</li>
+<li><p><strong>节点的度：</strong> 节点拥有的子树的个数，二叉树的度不大于2 叶子节点 度为0的节点，也称之为终端结点。</p>
+</li>
+<li><p><strong>高度：</strong>叶子结点的高度为1，叶子结点的父节点高度为2，以此类推，根节点的高度最高。</p>
+</li>
+<li><p><strong>层：</strong>根节点在第一层，以此类推</p>
+</li>
+<li><p><strong>兄弟节点 ：</strong>拥有共同父节点的节点互称为兄弟节点</p>
+</li>
+</ul>
+<p><strong>二叉查找树又称二叉排序树或者二叉搜索树。</strong></p>
+<p><strong>特点：</strong></p>
+<p>1.每一个节点上最多有两个子节点</p>
+<p>2.左子树上所有节点的值都小于根节点的值</p>
+<p>3.右子树上所有节点的值都大于根节点的值</p>
+<p><strong>目的：提高检索数据的性能</strong>。</p>
+<p><strong>规则：</strong>小的存左边,大的存右边,一样的不存.</p>
+<h3 id="5-平衡二叉树"><a href="#5-平衡二叉树" class="headerlink" title="5.平衡二叉树"></a>5.平衡二叉树</h3><ul>
+<li><strong>平衡二叉树是在满足查找二叉树的大小规则下，让树尽可能矮小，以此提高查数据的性能。</strong></li>
+</ul>
+<p><strong>平衡二叉树的要求</strong></p>
+<ul>
+<li>任意节点的左右两个子树的高度差不超过1，任意节点的左右两个子树都是一颗平衡二叉树</li>
+</ul>
+<p><strong>平衡二叉树在添加元素后可能导致不平衡</strong></p>
+<ul>
+<li>基本策略是进行<strong>左旋</strong>，或者<strong>右旋</strong>保证平衡。</li>
+</ul>
+<h3 id="6-红黑树"><a href="#6-红黑树" class="headerlink" title="6.红黑树"></a>6.红黑树</h3><p><strong>红黑树概述</strong></p>
+<ul>
+<li><p>红黑树是一种自平衡的二叉查找树，是计算机科学中用到的一种数据结构。</p>
+</li>
+<li><p>1972年出现，当时被称之为<strong>平衡二叉B树</strong>。1978年被修改为如今的”红黑树”。</p>
+</li>
+<li><p><strong>每一个节点可以是红或者黑</strong>；红黑树<strong>不是通过高度平衡的</strong>，它的平衡是通过“红黑规则”进行实现的。</p>
+</li>
+</ul>
+<p><strong>红黑规则</strong></p>
+<ul>
+<li><p>每一个节点或是红色的，或者是黑色的，<strong>根节点必须是黑色。</strong></p>
+</li>
+<li><p>如果某一个节点是红色，那么它的子节点必须是黑色(<strong>不能出现两个红色节点相连的情况</strong>)。</p>
+</li>
+<li><p><strong>对每一个节点，从该节点到其所有后代叶节点的简单路径上，均包含相同数目的黑色节点。</strong></p>
+</li>
+</ul>
+<p><strong>添加节点</strong></p>
+<ul>
+<li><p>添加的节点的颜色，可以是红色的，也可以是黑色的。</p>
+</li>
+<li><p>默认用红色效率高。</p>
+</li>
+</ul>
+<p><strong>红黑树小结</strong></p>
+<ul>
+<li>红黑树不是高度平衡的，它的平衡是通过”红黑规则”进行实现的</li>
+</ul>
+<p><strong>规则如下：</strong></p>
+<ul>
+<li><p>每一个节点或是红色的，或者是黑色的，<strong>根节点必须是黑色</strong></p>
+</li>
+<li><p>如果一个节点没有子节点或者父节点，则该节点相应的指针属性值为Nil，这些Nil视为叶节点，每个叶节点(Nil)是黑色的；</p>
+</li>
+<li><p>如果某一个节点是红色，那么它的子节点必须是黑色(<strong>不能出现两个红色节点相连的情况</strong>)</p>
+</li>
+<li><p><strong>对每一个节点，从该节点到其所有后代叶节点的简单路径上，均包含相同数目的黑色节点。</strong></p>
+</li>
+</ul>
+<p><strong>红黑树增删改查的性能都很好</strong></p>
+<h3 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h3><p><strong>各种数据结构的特点和作用：</strong></p>
+<ul>
+<li>队列：先进先出，后进后出。</li>
+<li>栈：后进先出，先进后出。</li>
+<li>数组：内存连续区域，查询快，增删慢。</li>
+<li>链表：元素是游离的，查询慢，首尾操作极快。</li>
+<li>二叉树：永远只有一个根节点, 每个结点不超过2个子节点的树。</li>
+<li>查找二叉树：小的左边，大的右边，但是可能树很高，查询性能变差。</li>
+<li>平衡查找二叉树：让树的高度差不大于1，增删改查都提高了。</li>
+<li>红黑树（就是基于红黑规则实现了自平衡的排序二叉树）</li>
+</ul>
+<h2 id="六-List系列集合"><a href="#六-List系列集合" class="headerlink" title="六.List系列集合"></a>六.List系列集合</h2><h3 id="1-List集合特点、特有API"><a href="#1-List集合特点、特有API" class="headerlink" title="1.List集合特点、特有API"></a>1.List集合特点、特有API</h3><p><strong>List系列集合特点</strong></p>
+<ul>
+<li>ArrayList、LinekdList ：<strong>有序，可重复，有索引。</strong></li>
+<li>有序：存储和取出的元素顺序一致</li>
+<li>有索引：可以通过索引操作元素</li>
+<li>可重复：存储的元素可以重复</li>
+</ul>
+<p><strong>List</strong>集合特有方法</p>
+<ul>
+<li>List集合因为支持索引，所以多了很多索引操作的独特api，其他Collection的功能List也都继承了。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void add(int  index,E element)</td>
+<td>在此集合中的指定位置插入指定的元素</td>
+</tr>
+<tr>
+<td>E remove(int  index)</td>
+<td>删除指定索引处的元素，返回被删除的元素</td>
+</tr>
+<tr>
+<td>E set(int index,E  element)</td>
+<td>修改指定索引处的元素，返回被修改的元素</td>
+</tr>
+<tr>
+<td>E get(int  index)</td>
+<td>返回指定索引处的元素</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.创建一个Arratlist集合对象</span></span><br><span class="line">        <span class="comment">//List:有序，可重复，有索引</span></span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;MySQL&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;MySQL&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.在某个索引位置插入元素</span></span><br><span class="line">        list.add(<span class="number">2</span>,<span class="string">&quot;HTML&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.根据索引删除元素，返回被删除的元素</span></span><br><span class="line">        System.out.println(list.remove(<span class="number">2</span>));</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.根据索引获取元素：public E get(int index):返回集合中指定位置的元素</span></span><br><span class="line">        System.out.println(list.get(<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//5.返回索引位置出的元素：public E set(int index, E element)</span></span><br><span class="line">        <span class="comment">//返回修改的数据</span></span><br><span class="line">        System.out.println(list.set(<span class="number">1</span>,<span class="string">&quot;张飞&quot;</span>));</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        list.clear();</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>List</strong>的实现类的底层原理：</p>
+<ul>
+<li><p>ArrayList底层是基于数组实现的，根据查询元素快，增删相对慢。</p>
+</li>
+<li><p>LinkedList底层基于双链表实现的，查询元素慢，增删首尾元素是非常快的。</p>
+</li>
+</ul>
+<h3 id="2-List集合的遍历方式小结"><a href="#2-List集合的遍历方式小结" class="headerlink" title="2.List集合的遍历方式小结"></a>2.List集合的遍历方式小结</h3><p>①迭代器 </p>
+<p>②增强for循环</p>
+<p>③Lambda表达式</p>
+<p>④for循环（因为List集合存在索引）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;java1&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;java2&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;java3&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 1.for循环 */</span></span><br><span class="line">        System.out.println(<span class="string">&quot;--------------&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ele</span> <span class="operator">=</span> list.get(i);</span><br><span class="line">            System.out.println(ele);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 2.迭代器。*/</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">        Iterator&lt;String&gt; it = list.iterator();</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ele</span> <span class="operator">=</span> it.next();</span><br><span class="line">            System.out.println(ele);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 3.增强for循环*/</span></span><br><span class="line">        System.out.println(<span class="string">&quot;---------------&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String s : list) &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 4.JDK 1.8开始之后的Lambda表达式*/</span></span><br><span class="line">        System.out.println(<span class="string">&quot;--------------------&quot;</span>);</span><br><span class="line">        list.forEach(s -&gt; &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-ArrayList集合的底层原理"><a href="#3-ArrayList集合的底层原理" class="headerlink" title="3.ArrayList集合的底层原理"></a>3.ArrayList集合的底层原理</h3><p><strong>ArrayList</strong>集合底层原理：</p>
+<ul>
+<li><p>ArrayList底层是基于数组实现的：根据索引定位元素快，增删需要做元素的移位操作。</p>
+</li>
+<li><p>第一次创建集合并添加第一个元素的时候，在底层创建一个默认长度为10的数组。</p>
+<p>List<String> list &#x3D; <strong>new</strong> ArrayList&lt;&gt;();</p>
+<p>list.add(<strong>“a”</strong>);</p>
+</li>
+</ul>
+<h3 id="4-LinkedList集合的底层原理"><a href="#4-LinkedList集合的底层原理" class="headerlink" title="4.LinkedList集合的底层原理"></a>4.LinkedList集合的底层原理</h3><p><strong>LinkedList</strong>的特点：</p>
+<ul>
+<li>底层数据结构是双链表，查询慢，首尾操作的速度是极快的，所以多了很多首尾操作的特有API。</li>
+</ul>
+<p><strong>LinkedList</strong>集合的特有功能：</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  void addFirst(E e)</td>
+<td>在该列表开头插入指定的元素</td>
+</tr>
+<tr>
+<td>public  void addLast(E e)</td>
+<td>将指定的元素追加到此列表的末尾</td>
+</tr>
+<tr>
+<td>public  E getFirst()</td>
+<td>返回此列表中的第一个元素</td>
+</tr>
+<tr>
+<td>public  E getLast()</td>
+<td>返回此列表中的最后一个元素</td>
+</tr>
+<tr>
+<td>public  E removeFirst()</td>
+<td>从此列表中删除并返回第一个元素</td>
+</tr>
+<tr>
+<td>public  E removeLast()</td>
+<td>从此列表中删除并返回最后一个元素</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//LinkedList可以完成队列结构，和栈结构 （双链表）</span></span><br><span class="line">        <span class="comment">//栈</span></span><br><span class="line">        LinkedList&lt;String&gt; stack = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">//压栈，入栈</span></span><br><span class="line">        stack.push(<span class="string">&quot;第一颗子弹&quot;</span>);</span><br><span class="line">        stack.push(<span class="string">&quot;第二颗子弹&quot;</span>);</span><br><span class="line">        stack.push(<span class="string">&quot;第三颗子弹&quot;</span>);</span><br><span class="line">        stack.push(<span class="string">&quot;第四颗子弹&quot;</span>);</span><br><span class="line">        System.out.println(stack);</span><br><span class="line">        <span class="comment">//出栈，弹栈</span></span><br><span class="line">        System.out.println(stack.pop());</span><br><span class="line">        System.out.println(stack.pop());</span><br><span class="line">        System.out.println(stack.pop());</span><br><span class="line">        System.out.println(stack);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//队列</span></span><br><span class="line">        LinkedList&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">//入队</span></span><br><span class="line">        queue.addLast(<span class="string">&quot;一号&quot;</span>);</span><br><span class="line">        queue.addLast(<span class="string">&quot;二号&quot;</span>);</span><br><span class="line">        queue.addLast(<span class="string">&quot;三号&quot;</span>);</span><br><span class="line">        queue.addLast(<span class="string">&quot;四号&quot;</span>);</span><br><span class="line">        System.out.println(queue);</span><br><span class="line">        <span class="comment">//出队</span></span><br><span class="line">        System.out.println(queue.removeFirst());</span><br><span class="line">        System.out.println(queue.removeFirst());</span><br><span class="line">        System.out.println(queue.removeFirst());</span><br><span class="line">        System.out.println(queue);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七-集合的并发修改异常问题"><a href="#七-集合的并发修改异常问题" class="headerlink" title="七.集合的并发修改异常问题"></a>七.<strong>集合的并发修改异常问题</strong></h2><ul>
+<li>当我们从集合中找出某个元素并删除的时候可能出现一种并发修改异常问题。</li>
+</ul>
+<p><strong>哪些遍历存在问题？</strong></p>
+<ul>
+<li><p>迭代器遍历集合且直接用集合删除元素的时候可能出现。</p>
+</li>
+<li><p>增强for循环遍历集合且直接用集合删除元素的时候可能出现。</p>
+</li>
+</ul>
+<p><strong>哪种遍历且删除元素不出问题</strong></p>
+<ul>
+<li><p>迭代器遍历集合但是用迭代器自己的删除方法操作可以解决。</p>
+</li>
+<li><p>使用for循环遍历并删除元素不会存在这个问题。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.准备数据</span></span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;三国志&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//需求：删除全部的 刘备 信息。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        //a. 迭代器遍历删除</span></span><br><span class="line"><span class="comment">//        Iterator&lt;String&gt; it = list.iterator();</span></span><br><span class="line"><span class="comment">//        while (it.hasNext())&#123;</span></span><br><span class="line"><span class="comment">//            String ele = it.next();</span></span><br><span class="line"><span class="comment">//            if (&quot;刘备&quot;.equals(ele))&#123;</span></span><br><span class="line"><span class="comment">//                it.remove();//使用迭代器删除当前未知的元素，保证不后移，能够成功遍历到全部元素</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        System.out.println(list);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//b. foreach遍历删除(会有BUG，不能使用)</span></span><br><span class="line"><span class="comment">//        for (String s : list) &#123;</span></span><br><span class="line"><span class="comment">//            if (&quot;刘备&quot;.equals(s))&#123;</span></span><br><span class="line"><span class="comment">//                list.remove(&quot;刘备&quot;);</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//c. Lambda表达式(有BUG)</span></span><br><span class="line"><span class="comment">//        list.forEach(s -&gt; &#123;</span></span><br><span class="line"><span class="comment">//            if (&quot;刘备&quot;.equals(s))&#123;</span></span><br><span class="line"><span class="comment">//                list.remove(&quot;刘备&quot;);</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        &#125;);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//d. for循环（不会出现异常错误，但是数据删除不完整）</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ele</span> <span class="operator">=</span> list.get(i);</span><br><span class="line">            <span class="keyword">if</span> (<span class="string">&quot;刘备&quot;</span>.equals(ele))&#123;</span><br><span class="line">                list.remove(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line">                i--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="八-泛型深入"><a href="#八-泛型深入" class="headerlink" title="八.泛型深入"></a>八.泛型深入</h2><h3 id="1-泛型的概述和优势"><a href="#1-泛型的概述和优势" class="headerlink" title="1.泛型的概述和优势"></a>1.泛型的概述和优势</h3><p><strong>泛型概述：</strong></p>
+<ul>
+<li><p>泛型：是JDK5中引入的特性，可以在编译阶段约束操作的数据类型，并进行检查。</p>
+</li>
+<li><p>泛型的格式：&lt;数据类型&gt;; 注意：泛型只能支持引用数据类型。</p>
+</li>
+<li><p>集合体系的全部接口和实现类都是支持泛型的使用的。</p>
+</li>
+</ul>
+<p><strong>泛型的好处：</strong></p>
+<ul>
+<li><p>统一数据类型。</p>
+</li>
+<li><p>把运行时期的问题提前到了编译期间，避免了强制类型转换可能出现的异常，因为编译阶段类型就能确定下来。</p>
+</li>
+</ul>
+<p><strong>泛型可以在很多地方进行定义</strong>:</p>
+<p>类后面           —-&gt; 泛型类</p>
+<p> 方法申明上   —–&gt; 泛型方法</p>
+<p> 接口后面       ——-&gt; 泛型接口</p>
+<h3 id="2-自定义泛型类"><a href="#2-自定义泛型类" class="headerlink" title="2.自定义泛型类"></a>2.自定义泛型类</h3><p><strong>泛型类的</strong>概述</p>
+<ul>
+<li><p>定义类时同时定义了泛型的类就是泛型类。</p>
+</li>
+<li><p>泛型类的格式：修饰符 class 类名&lt;泛型变量&gt;{ }</p>
+</li>
+<li><p>范例：public class MyArrayList<T> { }</p>
+</li>
+</ul>
+<p>此处泛型变量<strong>T</strong>可以随便写为任意标识，常见的如<strong>E、T、</strong>K、V等。</p>
+<p><strong>作用</strong>：编译阶段可以指定数据类型，类似于集合的作用。</p>
+<p><strong>案例：</strong></p>
+<ul>
+<li>模拟ArrayList集合自定义一个集合MyArrayList集合,完成添加和删除功能的泛型设计即可。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyArrayList</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">ArrayList</span> <span class="variable">lists</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>&#123;</span><br><span class="line">        lists.add(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(E e)</span>&#123;</span><br><span class="line">        lists.remove(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> lists.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//需求：模拟ArrayList定义一个MyArrayList,关注泛型设计</span></span><br><span class="line">        MyArrayList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">MyArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;Java&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;MySQL&quot;</span>);</span><br><span class="line">        list.remove(<span class="string">&quot;MySQL&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line"></span><br><span class="line">        MyArrayList&lt;Integer&gt; list1 = <span class="keyword">new</span> <span class="title class_">MyArrayList</span>&lt;&gt;();</span><br><span class="line">        list1.add(<span class="number">23</span>);</span><br><span class="line">        list1.add(<span class="number">24</span>);</span><br><span class="line">        list1.add(<span class="number">25</span>);</span><br><span class="line">        list1.remove(<span class="number">25</span>);</span><br><span class="line">        System.out.println(list1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>泛型类的</strong>原理：</p>
+<ul>
+<li>把出现泛型变量的地方全部替换成传输的真实数据类型。</li>
+</ul>
+<h3 id="3-自定义泛型方法"><a href="#3-自定义泛型方法" class="headerlink" title="3.自定义泛型方法"></a>3.自定义泛型方法</h3><p><strong>泛型方法的概述：</strong></p>
+<ul>
+<li><p>定义方法时同时定义了泛型的方法就是泛型方法。</p>
+</li>
+<li><p>泛型方法的格式：修饰符 &lt;泛型变量&gt; 方法返回值 方法名称(形参列表){}</p>
+</li>
+<li><p>范例： public <T> void show(T t) { }</p>
+</li>
+</ul>
+<p><strong>作用</strong>：方法中可以使用泛型接收一切实际类型的参数，方法更具备通用性。</p>
+<p><strong>案例：</strong></p>
+<ul>
+<li>给你任何一个类型的数组，都能返回它的内容。也就是实现Arrays.toString(数组)的功能！</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GenericDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        String[] names = &#123;<span class="string">&quot;刘备&quot;</span>,<span class="string">&quot;关羽&quot;</span>,<span class="string">&quot;张飞&quot;</span>&#125;;</span><br><span class="line">        printArray(names);</span><br><span class="line"></span><br><span class="line">        Integer[] ages = &#123;<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>&#125;;</span><br><span class="line">        printArray(ages);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">printArray</span><span class="params">(T[] arr)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (arr != <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;[&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">                sb.append(arr[i]).append(i == arr.length - <span class="number">1</span> ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;,&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.append(<span class="string">&quot;]&quot;</span>);</span><br><span class="line">            System.out.println(sb);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(arr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>泛型</strong>方法的原理：</p>
+<ul>
+<li>把出现泛型变量的地方全部替换成传输的真实数据类型。</li>
+</ul>
+<h3 id="4-自定义泛型接口"><a href="#4-自定义泛型接口" class="headerlink" title="4.自定义泛型接口"></a>4.自定义泛型接口</h3><p><strong>泛型接口</strong>的概述</p>
+<ul>
+<li><p>使用了泛型定义的接口就是泛型接口。</p>
+</li>
+<li><p>泛型接口的格式：修饰符 interface 接口名称&lt;泛型变量&gt;{}</p>
+</li>
+<li><p>范例： public interface Data<E>{}</p>
+</li>
+</ul>
+<p><strong>作用</strong>：泛型接口可以让实现类选择当前功能需要操作的数据类型</p>
+<p><strong>案例：</strong></p>
+<ul>
+<li>教务系统，提供一个接口可约束一定要完成数据（学生，老师）的增删改查操作</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Data</span> &lt;E&gt;&#123;</span><br><span class="line">    <span class="keyword">void</span>  <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(<span class="type">int</span> id)</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(E e)</span>;</span><br><span class="line">    E <span class="title function_">queryById</span><span class="params">(<span class="type">int</span> id)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Teacher</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentData</span> <span class="keyword">implements</span> <span class="title class_">Data</span>&lt;Student&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(Student student)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Student student)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Student <span class="title function_">queryById</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TeacherData</span> <span class="keyword">implements</span> <span class="title class_">Data</span>&lt;Teacher&gt;&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(Teacher teacher)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Teacher teacher)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Teacher <span class="title function_">queryById</span><span class="params">(<span class="type">int</span> id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>泛型</strong>接口的原理：</p>
+<ul>
+<li>实现类可以在实现接口的时候传入自己操作的数据类型，这样重写的方法都将是针对于该类型的操作。</li>
+</ul>
+<h3 id="5-泛型通配符、上下限"><a href="#5-泛型通配符、上下限" class="headerlink" title="5.泛型通配符、上下限"></a>5.泛型通配符、上下限</h3><p><strong>泛型通配符：案例导学</strong></p>
+<ul>
+<li>开发一个赛车的游戏，所有的汽车都能一起参与比赛。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;BNEZ&gt; bnezs = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        bnezs.add(<span class="keyword">new</span> <span class="title class_">BNEZ</span>());</span><br><span class="line">        bnezs.add(<span class="keyword">new</span> <span class="title class_">BNEZ</span>());</span><br><span class="line">        bnezs.add(<span class="keyword">new</span> <span class="title class_">BNEZ</span>());</span><br><span class="line">        go(bnezs);</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;BWM&gt; bwms = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        bwms.add(<span class="keyword">new</span> <span class="title class_">BWM</span>());</span><br><span class="line">        bwms.add(<span class="keyword">new</span> <span class="title class_">BWM</span>());</span><br><span class="line">        bwms.add(<span class="keyword">new</span> <span class="title class_">BWM</span>());</span><br><span class="line">        go(bwms);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     所有车比赛</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">go</span><span class="params">(ArrayList&lt;? extends Car&gt; cars)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BNEZ</span> <span class="keyword">extends</span> <span class="title class_">Car</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BWM</span> <span class="keyword">extends</span> <span class="title class_">Car</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//父类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>通配符</strong>:?</p>
+<ul>
+<li><p>? 可以在“使用泛型”的时候代表一切类型。</p>
+</li>
+<li><p>E T K V 是在定义泛型的时候使用的。</p>
+</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ul>
+<li>虽然BMW和BENZ都继承了Car但是ArrayList<BMW>和ArrayList<BENZ>与ArrayList<Car>没有关系的！!</li>
+</ul>
+<p><strong>泛型的上下限：</strong></p>
+<ul>
+<li>? <strong>extends</strong> <strong>Car</strong>: ?必须是Car或者其子类  泛型上限</li>
+<li>? <strong>super</strong> <strong>Car</strong> ： ?必须是Car或者其父类  泛型下限</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B63,%E9%9B%86%E5%90%88%EF%BC%8CColllection,%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B63,%E9%9B%86%E5%90%88%EF%BC%8CColllection,%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B64%EF%BC%8CSet%E9%9B%86%E5%90%88%EF%BC%8CMap%E9%9B%86%E5%90%88/">Java进阶，Set集合，Map集合</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B62_4%E5%8C%85%E8%A3%85%E7%B1%BB%EF%BC%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Java时间与日期，包装类，正则表达式</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

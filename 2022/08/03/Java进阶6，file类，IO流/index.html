@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java进阶，file类，IO流 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java进阶，file类，IO流</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:51:13</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java进阶，file类，IO流"><a href="#Java进阶，file类，IO流" class="headerlink" title="Java进阶，file类，IO流"></a>Java进阶，file类，IO流</h1><h2 id="一-File类"><a href="#一-File类" class="headerlink" title="一.File类"></a>一.File类</h2><p><strong>File</strong>类概述</p>
+<ul>
+<li>File类的对象代表操作系统的文件（文件、文件夹），File类在java.io.File包下。</li>
+<li>File类提供了诸如：创建文件对象代表文件，获取文件信息（大小、修改时间）、删除文件、创建文件（文件夹）等功能</li>
+</ul>
+<h3 id="1-创建File对象"><a href="#1-创建File对象" class="headerlink" title="1.创建File对象"></a>1.创建File对象</h3><p><strong>File</strong>类创建对象</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>public</strong>  File(String pathname)</td>
+<td>根据文件路径创建文件对象</td>
+</tr>
+<tr>
+<td><strong>public</strong> File(String  parent, String child)</td>
+<td>根据父路径名字符串和子路径名字符串创建文件对象</td>
+</tr>
+<tr>
+<td><strong>public</strong> File(File parent, String child)</td>
+<td>根据父路径对应文件对象和子路径名字符串创建文件对象</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong></p>
+<ul>
+<li>File对象可以定位文件和文件夹</li>
+<li>File封装的对象仅仅是一个路径名，这个路径可以是存在的，也可以是不存在的。</li>
+</ul>
+<p><strong>绝对路径和相对路径</strong></p>
+<ul>
+<li><p>绝对路径：从盘符开始  <strong>File file1 &#x3D; new File(“D:\itheima\a.txt”);</strong></p>
+</li>
+<li><p>相对路径：不带盘符，默认直接到当前工程下的目录寻找文件。 <strong>File file3 &#x3D; new File(“模块名\a.txt”);</strong></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.绝对路径创建一个文件对象</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:/demo/xaioren.jpg&quot;</span>);</span><br><span class="line">        <span class="comment">//a.获取它的绝对路径。</span></span><br><span class="line">        System.out.println(f1.getAbsolutePath());</span><br><span class="line">        <span class="comment">//b.获取文件定义的时候使用的路径。</span></span><br><span class="line">        System.out.println(f1.getPath());</span><br><span class="line">        <span class="comment">//c.获取文件的名称：带后缀</span></span><br><span class="line">        System.out.println(f1.getName());</span><br><span class="line">        <span class="comment">//d.获取文件的大小：字节个数</span></span><br><span class="line">        System.out.println(f1.length());<span class="comment">//字节大小</span></span><br><span class="line">        <span class="comment">//e.获取文件的最后修改时间</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> f1.lastModified();</span><br><span class="line">        System.out.println(<span class="string">&quot;最后修改的时间：&quot;</span> + <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>).format(time));</span><br><span class="line">        <span class="comment">//f.判断文件是文件还是文件夹</span></span><br><span class="line">        System.out.println(f1.isFile());<span class="comment">//true</span></span><br><span class="line">        System.out.println(f1.isDirectory());<span class="comment">//false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-常用方法：判断文件类型、获取文件信息"><a href="#2-常用方法：判断文件类型、获取文件信息" class="headerlink" title="2.常用方法：判断文件类型、获取文件信息"></a>2.常用方法：判断文件类型、获取文件信息</h3><p><strong>File</strong>类的判断文件类型、获取文件信息功能</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  boolean isDirectory()</td>
+<td>判断此路径名表示的File是否为文件夹</td>
+</tr>
+<tr>
+<td>public  boolean isFile()</td>
+<td>判断此路径名表示的File是否为文件</td>
+</tr>
+<tr>
+<td>public  boolean  exists()</td>
+<td>判断此路径名表示的File是否存在</td>
+</tr>
+<tr>
+<td>public long  length()</td>
+<td>返回文件的大小（字节数量）</td>
+</tr>
+<tr>
+<td>public  String getAbsolutePath()</td>
+<td>返回文件的绝对路径</td>
+</tr>
+<tr>
+<td>public  String getPath()</td>
+<td>返回定义文件时使用的路径</td>
+</tr>
+<tr>
+<td>public  String getName()</td>
+<td>返回文件的名称，带后缀</td>
+</tr>
+<tr>
+<td>public  long lastModified()</td>
+<td>返回文件的最后修改时间（时间毫秒值）</td>
+</tr>
+</tbody></table>
+<h3 id="3-常用方法：创建文件、删除文件功能"><a href="#3-常用方法：创建文件、删除文件功能" class="headerlink" title="3.常用方法：创建文件、删除文件功能"></a>3.常用方法：创建文件、删除文件功能</h3><p><strong>File</strong>类创建文件的功能</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean createNewFile()</td>
+<td>创建一个新的空的文件</td>
+</tr>
+<tr>
+<td>public boolean mkdir()</td>
+<td>只能创建一级文件夹</td>
+</tr>
+<tr>
+<td><strong>public boolean mkdirs()</strong></td>
+<td><strong>可以创建多级文件夹</strong></td>
+</tr>
+</tbody></table>
+<p><strong>File</strong>类删除文件的功能</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  boolean delete()</td>
+<td>删除由此抽象路径名表示的文件或空文件夹</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：<strong>delete方法默认只能删除文件和空文件夹，delete方法直接删除不走回收站</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">File</span> <span class="variable">f</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;file-io-app/src/data.txt&quot;</span>);</span><br><span class="line">        <span class="comment">//a.创建新文件，创建成功返回true,反之,不需要这个，以后文件写出去的时候都会自动创建</span></span><br><span class="line">        System.out.println(f.createNewFile());</span><br><span class="line">        <span class="type">File</span> <span class="variable">f1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;file-io-app/src/data1.txt&quot;</span>);</span><br><span class="line">        System.out.println(f1.createNewFile());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//b.mkdir创建一级目录</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:/demo/aaa&quot;</span>);</span><br><span class="line">        System.out.println(f2.mkdir());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//c.mkdirs创建多级目录</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:/demo/bbb/ccc/vvv&quot;</span>);</span><br><span class="line">        System.out.println(f3.mkdirs());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//d.删除文件或者空文件夹</span></span><br><span class="line">        System.out.println(f1.delete());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//e.只能删除空文件夹，不能删除非空文件夹</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:/demo&quot;</span>);</span><br><span class="line">        System.out.println(f4.delete());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-常用方法：遍历文件夹"><a href="#4-常用方法：遍历文件夹" class="headerlink" title="4.常用方法：遍历文件夹"></a>4.常用方法：遍历文件夹</h3><p><strong>File</strong>类的遍历功能</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String[] list()</td>
+<td>获取当前目录下所有的”一级文件名称”到一个字符串数组中去返回。</td>
+</tr>
+<tr>
+<td>public File[] listFiles()(常用)</td>
+<td>获取当前目录下所有的”一级文件对象”到一个文件对象数组中去返回（重点）</td>
+</tr>
+</tbody></table>
+<p><strong>listFiles</strong>方法注意事项：</p>
+<ul>
+<li>当文件不存在时或者代表文件时，返回null</li>
+<li>当文件对象代表一个空文件夹时，返回一个长度为0的数组</li>
+<li>当文件对象是一个有内容的文件夹时，将里面所有文件和文件夹的路径放在File数组中返回</li>
+<li>当文件对象是一个有隐藏文件的文件夹时，将里面所有文件和文件夹的路径放在File数组中返回，包含隐藏文件</li>
+<li>当没有权限访问该文件夹时，返回null</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.定位一个文件夹</span></span><br><span class="line">        <span class="type">File</span> <span class="variable">f1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:/demo&quot;</span>);</span><br><span class="line">        String[] names = f1.list();</span><br><span class="line">        <span class="keyword">for</span> (String name : names) &#123;</span><br><span class="line">            System.out.println(name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.一级文件对象</span></span><br><span class="line">         File[] files = f1.listFiles();</span><br><span class="line">        <span class="keyword">for</span> (File file : files) &#123;</span><br><span class="line">            System.out.println(file.getAbsolutePath());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//注意事项</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-字符集"><a href="#二-字符集" class="headerlink" title="二.字符集"></a>二.字符集</h2><h3 id="1-常见字符集介绍"><a href="#1-常见字符集介绍" class="headerlink" title="1.常见字符集介绍"></a>1.常见字符集介绍</h3><p><strong>字符集</strong>基础知识：</p>
+<ul>
+<li>字符集（Character Set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集有：</li>
+</ul>
+<p>​           ASCII字符集</p>
+<p>​           GBK字符集</p>
+<p>​           Unicode（UTF-8）字符集等。</p>
+<ul>
+<li><strong>英文和数字等在任何国家的字符集中都占</strong>1个字节</li>
+<li><strong>GBK字符中一个中文字符占2个字节</strong></li>
+<li><strong>UTF-8编码中一个中文1般占3个字节</strong></li>
+</ul>
+<p>注意：编码前和编码后需要一致，否则会乱码</p>
+<p>​            英文和数字不会</p>
+<h3 id="2-字符集的编码、解码操作"><a href="#2-字符集的编码、解码操作" class="headerlink" title="2.字符集的编码、解码操作"></a>2.字符集的编码、解码操作</h3><p><strong>String</strong>编码</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte[] getBytes()</td>
+<td>使用平台的默认字符集将该  String编码为一系列字节，将结果存储到新的字节数组中</td>
+</tr>
+<tr>
+<td>byte[] getBytes(String charsetName)</td>
+<td>使用指定的字符集将该 String编码为一系列字节，将结果存储到新的字节数组中</td>
+</tr>
+</tbody></table>
+<p><strong>String</strong>解码</p>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String(byte[] bytes)</td>
+<td>通过使用平台的默认字符集解码指定的字节数组来构造新的  String</td>
+</tr>
+<tr>
+<td>String(byte[] bytes, String charsetName)</td>
+<td>通过指定的字符集解码指定的字节数组来构造新的 String</td>
+</tr>
+</tbody></table>
+<h2 id="三-IO流"><a href="#三-IO流" class="headerlink" title="三.IO流"></a>三.IO流</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.<strong>概述</strong></h3><ul>
+<li>I表示intput，把硬盘文件中的数据读入到内存的过程，称之输入，负责读。</li>
+<li>O表示output，把内存中的数据写出到硬盘文件的过程，称之输出，负责写。</li>
+</ul>
+<p><strong>总结</strong>流的四大类:</p>
+<ul>
+<li>字节输入流：以内存为基准，来自磁盘文件&#x2F;网络中的数据<strong>以字节的形式读入到内存</strong>中去的流称为字节输入流。</li>
+<li>字节输出流：以内存为基准，把内存中的数据<strong>以字节写出到磁盘文件或者网络中去</strong>的流称为字节输出流。</li>
+<li>字符输入流：以内存为基准，来自磁盘文件&#x2F;网络中的数据<strong>以字符的形式读入到内存</strong>中去的流称为字符输入流。</li>
+<li>字符输出流：以内存为基准，把内存中的数据<strong>以字符写出到磁盘文件或者网络介质中</strong>去的流称为字符输出流。</li>
+</ul>
+<p>1.IO流的作用？</p>
+<ul>
+<li><strong>读写文件数据的</strong></li>
+</ul>
+<p>2.IO流是怎么划分的，大体分为几类，各自的作用？</p>
+<ul>
+<li><strong>字节输入流 InputStream</strong>（读字节数据的）</li>
+<li><strong>字节输出流 OutoutStream</strong>（写字节数据出去的）</li>
+<li><strong>字符输入流 Reader</strong>（读字符数据的）</li>
+<li><strong>字符输出流 Writer</strong>（写字符数据出去的）</li>
+</ul>
+<h3 id="2-字节流"><a href="#2-字节流" class="headerlink" title="2.字节流"></a>2.字节流</h3><h4 id="1-字节输入流：每次读取一个字节，每次读取一个字节数组"><a href="#1-字节输入流：每次读取一个字节，每次读取一个字节数组" class="headerlink" title="1.字节输入流：每次读取一个字节，每次读取一个字节数组"></a>1.字节输入流：每次读取一个字节，每次读取一个字节数组</h4><p><strong>文件字节输入流：FileInputStream</strong></p>
+<ul>
+<li>作用：以内存为基准，把磁盘文件中的数据以字节的形式读取到内存中去。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  FileInputStream(File file)</td>
+<td>创建字节输入流管道与源文件对象接通</td>
+</tr>
+<tr>
+<td>public  FileInputStream(String pathname)</td>
+<td>创建字节输入流管道与源文件路径接通</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int  read()</td>
+<td>每次读取一个字节返回，如果字节已经没有可读的返回-1</td>
+</tr>
+<tr>
+<td>public int  read(byte[] buffer)</td>
+<td>每次读取一个字节数组返回，如果字节已经没有可读的返回-1</td>
+</tr>
+</tbody></table>
+<p>1.使用字节流读取中文输出乱码，如何使用字节输入流读取中文输出不乱码呢？</p>
+<ul>
+<li><strong>定义一个与文件一样大的字节数组，一次性读取完文件的全部字节。</strong></li>
+</ul>
+<p>2.直接把文件数据全部读取到一个字节数组可以避免乱码，是否存在问题？</p>
+<ul>
+<li><strong>如果文件过大，字节数组可能引起内存溢出。</strong></li>
+</ul>
+<h4 id="2-字节输入流：读取文件的全部字节"><a href="#2-字节输入流：读取文件的全部字节" class="headerlink" title="2.字节输入流：读取文件的全部字节"></a>2.字节输入流：读取文件的全部字节</h4><p><strong>方式一</strong></p>
+<ul>
+<li>自己定义一个字节数组与文件的大小一样大，然后使用读取字节数组的方法，一次性读取完成。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int  read(byte[] buffer)</td>
+<td>每次读取一个字节数组返回，如果字节已经没有可读的返回-1</td>
+</tr>
+</tbody></table>
+<p><strong>方式二</strong></p>
+<ul>
+<li>官方为字节输入流InputStream提供了如下API可以直接把文件的全部数据读取到一个字节数组中</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public byte[] readAllBytes() throws IOException</td>
+<td>直接将当前字节输入流对应的文件对象的字节数据装到一个字节数组返回</td>
+</tr>
+</tbody></table>
+<p>1.如何使用字节输入流读取中文内容输出不乱码呢？</p>
+<ul>
+<li><strong>一次性读取完全部字节。</strong></li>
+<li><strong>可以定义与文件一样大的字节数组读取，也可以使用官方</strong>API.</li>
+</ul>
+<p>2.直接把文件数据全部读取到一个字节数组可以避免乱码，是否存在问题？</p>
+<ul>
+<li><strong>如果文件过大，定义的字节数组可能引起内存溢出。</strong></li>
+</ul>
+<h4 id="3-字节输出流：写字节数据到文件"><a href="#3-字节输出流：写字节数据到文件" class="headerlink" title="3.字节输出流：写字节数据到文件"></a>3.字节输出流：写字节数据到文件</h4><p><strong>文件字节输出流：FileOutputStream</strong></p>
+<ul>
+<li>作用：以内存为基准，把内存中的数据以字节的形式写出到磁盘文件中去的流。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public FileOutputStream(File file)</td>
+<td>创建字节输出流管道与源文件对象接通</td>
+</tr>
+<tr>
+<td>public FileOutputStream(File file，boolean append)</td>
+<td>创建字节输出流管道与源文件对象接通，可追加数据</td>
+</tr>
+<tr>
+<td>public FileOutputStream(String filepath)</td>
+<td>创建字节输出流管道与源文件路径接通</td>
+</tr>
+<tr>
+<td>public FileOutputStream(String filepath，boolean append)</td>
+<td>创建字节输出流管道与源文件路径接通，可追加数据</td>
+</tr>
+</tbody></table>
+<p><strong>文件字节输出流（FileOutputStream）写数据出去的API</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public void write(int a)</td>
+<td>写一个字节出去</td>
+</tr>
+<tr>
+<td>public void write(byte[] buffer)</td>
+<td>写一个字节数组出去</td>
+</tr>
+<tr>
+<td>public void write(byte[] buffer , int pos , int len)</td>
+<td>写一个字节数组的一部分出去。</td>
+</tr>
+</tbody></table>
+<p><strong>流的关闭与刷新</strong> </p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flush()</td>
+<td>刷新流，还可以继续写数据</td>
+</tr>
+<tr>
+<td>close()</td>
+<td>关闭流，释放资源，但是在关闭之前会先刷新流。一旦关闭，就不能再写数据</td>
+</tr>
+</tbody></table>
+<p>1.字节输出流如何实现写出去的数据能换行</p>
+<ul>
+<li><strong>os.write(“\r\n”.getBytes())</strong></li>
+</ul>
+<h3 id="3-IO流：资源释放的方式"><a href="#3-IO流：资源释放的方式" class="headerlink" title="3.IO流：资源释放的方式"></a>3.<strong>IO</strong>流：资源释放的方式</h3><h4 id="1-try-catch-finally"><a href="#1-try-catch-finally" class="headerlink" title="1.try-catch-finally"></a>1.<strong>try-catch-finally</strong></h4><ul>
+<li><strong>finally</strong>：放在try-catch后面的，无论是正常执行还是异常执行代码，<strong>最后一定要执行</strong>，除非JVM退出。</li>
+<li><strong>作用</strong>：一般用于进行最后的资源释放操作（专业级做法）</li>
+</ul>
+<p>格式：</p>
+<p><strong>try</strong> {<br>   FileOutputStream fos &#x3D; <strong>new</strong> FileOutputStream(<strong>“a.txt”</strong>);<br>   fos.write(97);<br> } <strong>catch</strong> (IOException e) {<br>   e.printStackTrace();<br> } finally{}</p>
+<h4 id="2-try-with-resource"><a href="#2-try-with-resource" class="headerlink" title="2.try-with-resource"></a>2.try-with-resource</h4><ul>
+<li><strong>自动释放资源、代码简洁</strong></li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B66%EF%BC%8Cfile%E7%B1%BB%EF%BC%8CIO%E6%B5%81/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B66%EF%BC%8Cfile%E7%B1%BB%EF%BC%8CIO%E6%B5%81/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B65%EF%BC%8C%E4%B8%8D%E5%8F%AF%E5%8F%98%E9%9B%86%E5%90%88%EF%BC%8CStream%E6%B5%81/">Java进阶，不可变集合，Stream流</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

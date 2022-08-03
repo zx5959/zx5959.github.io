@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java进阶1_1.static进阶 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java进阶1_1.static进阶</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:44:03</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="static静态关键字-继承"><a href="#static静态关键字-继承" class="headerlink" title="static静态关键字,继承"></a>static静态关键字,继承</h1><h2 id="一-static是什么，static修饰成员变量的用法"><a href="#一-static是什么，static修饰成员变量的用法" class="headerlink" title="一.static是什么，static修饰成员变量的用法"></a>一.static是什么，static修饰成员变量的用法</h2><h3 id="1-static概述"><a href="#1-static概述" class="headerlink" title="1.static概述"></a>1.static概述</h3><ul>
+<li>static是<strong>静态</strong>的意思，可以用来修饰成员变量，成员方法</li>
+<li>static修饰成员变量之后称为<strong>静态成员变量（类变量</strong>），<strong>修饰方法之后称为静态方法（类方法）</strong>。</li>
+<li>static修饰后的成员变量，可以被类的<strong>所有对象</strong>共享（访问、修改)。</li>
+</ul>
+<h3 id="2-static修饰的成员变量是什么，有何特点"><a href="#2-static修饰的成员变量是什么，有何特点" class="headerlink" title="2.static修饰的成员变量是什么，有何特点"></a>2.static修饰的成员变量是什么，有何特点</h3><ul>
+<li><p><strong>静态成员变量</strong>（有static修饰，属于类、加载一次，内存中只有一份），访问格式</p>
+</li>
+<li><p>类名.静态成员变量(推荐)</p>
+<p>对象.静态成员变量(不推荐)。</p>
+</li>
+<li><p><strong>实例成员变量</strong>（无static修饰，属于对象），访问格式：</p>
+</li>
+<li><p>对象.实例成员变量。</p>
+</li>
+</ul>
+<h3 id="3-两种成员变量各自在什么情况下定义？"><a href="#3-两种成员变量各自在什么情况下定义？" class="headerlink" title="3.两种成员变量各自在什么情况下定义？"></a>3.两种成员变量各自在什么情况下定义？</h3><ul>
+<li><strong>静态成员变量</strong>：表示在线人数等需要被类的所有对象共享的信息时。</li>
+<li><strong>实例成员变量</strong>：属于每个对象，且每个对象的该信息不同时（如：name,age,money…）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Study</span> &#123;</span><br><span class="line">    <span class="comment">//有static修饰，为静态成员变量</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">onlineNumber</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//无static修饰，为实例成员变量,属于每个对象的，必须用对象名访问</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//目标：理解static修饰成员边的作用和访问特点</span></span><br><span class="line">        <span class="comment">//1.类名.静态成员变量</span></span><br><span class="line">        System.out.println(Study.onlineNumber);</span><br><span class="line">        System.out.println(onlineNumber);<span class="comment">//调用静态成员变量可以省略类名</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.对象名.实例成员变量</span></span><br><span class="line">        <span class="comment">//System.out.println(Study.name);//无对象的的时候，不可使用类名来调用实例成员变量</span></span><br><span class="line"></span><br><span class="line">        <span class="type">Study</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Study</span>();</span><br><span class="line">        s.name = <span class="string">&quot;张飞&quot;</span>;</span><br><span class="line">        s.age = <span class="number">38</span>;</span><br><span class="line">        System.out.println(s.name);</span><br><span class="line">        System.out.println(s.age);</span><br><span class="line">        </span><br><span class="line">        s.onlineNumber++;<span class="comment">//新来了一个人</span></span><br><span class="line">        System.out.println(s.onlineNumber);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-static修饰成员变量方法的基本用法"><a href="#二-static修饰成员变量方法的基本用法" class="headerlink" title="二.static修饰成员变量方法的基本用法"></a>二.static修饰成员变量方法的基本用法</h2><h3 id="1-成员方法的分类："><a href="#1-成员方法的分类：" class="headerlink" title="1.成员方法的分类："></a>1.<strong>成员方法的分类：</strong></h3><ul>
+<li><p><strong>静态成员方法</strong>（有static修饰，归属于类），建议用类名访问，也可以用对象访问。</p>
+</li>
+<li><p><strong>实例成员方法</strong>（无static修饰，归属于对象），只能用对象触发访问。</p>
+</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><p>表示对象自己的行为的，且方法中需要访问实例成员的，则该方法必须申明成实例方法。</p>
+</li>
+<li><p>如果该方法是以执行一个共用功能为目的，则可以申明成静态方法。</p>
+</li>
+</ul>
+<h3 id="2-成员方法的分类和访问分别是什么样的"><a href="#2-成员方法的分类和访问分别是什么样的" class="headerlink" title="2.成员方法的分类和访问分别是什么样的"></a>2.成员方法的分类和访问分别是什么样的</h3><ul>
+<li><strong>静态成员方法</strong>（有static修饰，属于类和对象共享）访问格式：</li>
+</ul>
+<p>类名.静态成员方法。</p>
+<p>对象.静态成员方法。（不推荐）</p>
+<ul>
+<li><strong>实例成员方法</strong>（无static修饰，属于对象）的访问格式：</li>
+</ul>
+<p>对象.实例成员方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="comment">//实例成员变量，无static修饰，属于对象</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">//静态方法，有static修饰，归属于类，可以被共享，用类名或者对象都可以访问。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getMax</span><span class="params">(<span class="type">int</span> age1,<span class="type">int</span> age2)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age1 &gt; age2 ? age1 : age2;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//实例方法：属于对象的，只能用对象触发访问</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">study</span> <span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(name + <span class="string">&quot;天下无敌！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.类名.静态成员变量</span></span><br><span class="line">        System.out.println(Student.getMax(<span class="number">100</span>,<span class="number">20</span>));</span><br><span class="line">        System.out.println(getMax(<span class="number">100</span>,<span class="number">20</span>));<span class="comment">//注意：同一个类中，访问静态方法，类名可以省略</span></span><br><span class="line">        <span class="comment">//study();报错，需要对象来调用实例方法</span></span><br><span class="line">        <span class="comment">//2.对象名，实例方法</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">        s.name = <span class="string">&quot;二弟&quot;</span>;</span><br><span class="line">        s.study();</span><br><span class="line">        <span class="comment">//3.对象.静态方法（语法可行，但是并不推荐）</span></span><br><span class="line">        System.out.println(s.getMax(<span class="number">180</span>,<span class="number">20</span>));<span class="comment">//不推荐使用</span></span><br><span class="line">        System.out.println(Student.getMax(<span class="number">180</span>,<span class="number">20</span>));</span><br><span class="line">        System.out.println(getMax(<span class="number">180</span>,<span class="number">20</span>));</span><br><span class="line">        <span class="comment">//使用类名直接调用  静态方法 ,可以省略类名</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-static访问注意事项："><a href="#3-static访问注意事项：" class="headerlink" title="3.static访问注意事项："></a>3.static访问注意事项：</h3><ul>
+<li>静态方法只能访问静态的成员，不可以<strong>直接访问</strong>实例成员。</li>
+<li>实例方法可以访问静态的成员，也可以访问实例成员。</li>
+<li>静态方法中是<strong>不可以出现this关键字</strong>的。</li>
+</ul>
+<h2 id="三-static-工具类"><a href="#三-static-工具类" class="headerlink" title="三.static:工具类"></a>三.static:工具类</h2><h3 id="1-工具类："><a href="#1-工具类：" class="headerlink" title="1.工具类："></a>1.工具类：</h3><ul>
+<li><p><strong>类中都是一些静态方法</strong>，每个方法都是以完成一个共用的功能为目的，这个类用来给系统开发人员共同使用的。</p>
+</li>
+<li><p>工具类的好处：一是调用方便，二是提高了代码复用（一次编写，处处可用）</p>
+</li>
+<li><p>由于工具里面都是静态方法，直接用类名即可访问，因此，工具类无需创建对象，建议将工具类的构造器进行私有。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Util</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 由于工具类无需创建对象，可将其构造器进行私有化！</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Util</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 静态方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">createVerifyCode</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">        <span class="comment">//开发一个验证码：</span></span><br><span class="line">        <span class="comment">//1.定义一个变量记住验证码</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">code</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="comment">//2.定义一个变量记住全部验证码字符</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">data</span> <span class="operator">=</span> <span class="string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&quot;</span>;</span><br><span class="line">        <span class="comment">//3.定义一个循环生成几个随机索引，去得到几个字符</span></span><br><span class="line">        <span class="type">Random</span> <span class="variable">r</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="comment">//4.获取验证码索引对应的字符，接给code</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> r.nextInt(data.length());</span><br><span class="line">            code += data.charAt(index);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Login</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(Util.createVerifyCode(<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="案例-定义数组类工具类"><a href="#案例-定义数组类工具类" class="headerlink" title="案例.定义数组类工具类:"></a>案例.定义数组类工具类:</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayUtil</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将构造器私有化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">ArrayUtil</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 静态方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toString</span> <span class="params">(<span class="type">int</span> [] arr)</span>&#123;</span><br><span class="line">        <span class="comment">//1.校验</span></span><br><span class="line">        <span class="keyword">if</span>(arr == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//2.拼接内容并返回</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;[&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            result += (i == arr.length - <span class="number">1</span> ? arr[i] : arr[i]+<span class="string">&quot;,&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        result += <span class="string">&quot;]&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">demo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] arr = <span class="literal">null</span>;</span><br><span class="line">        <span class="type">int</span>[] arr1 = &#123;&#125;;</span><br><span class="line">        <span class="type">int</span>[] arr2 = &#123;<span class="number">11</span>,<span class="number">22</span>,<span class="number">33</span>,<span class="number">44</span>,<span class="number">55</span>&#125;;</span><br><span class="line"></span><br><span class="line">        System.out.println(ArrayUtil.toString(arr));</span><br><span class="line">        System.out.println(ArrayUtil.toString(arr1));</span><br><span class="line">        System.out.println(ArrayUtil.toString(arr2));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-代码块："><a href="#2-代码块：" class="headerlink" title="2.代码块："></a>2.代码块：</h3><h4 id="1-代码块概述："><a href="#1-代码块概述：" class="headerlink" title="1.代码块概述："></a>1.<strong>代码块概述</strong>：</h4><ul>
+<li><p>代码块是类的5大成分之一（成员变量、构造器，方法，代码块，内部类），定义在类中方法外。</p>
+</li>
+<li><p>在Java类下，使用 { } 括起来的代码被称为代码块 。</p>
+</li>
+</ul>
+<h4 id="2-代码块分为："><a href="#2-代码块分为：" class="headerlink" title="2.代码块分为："></a>2.<strong>代码块分为</strong>：</h4><p><strong>静态代码块</strong>:</p>
+<p><strong>格式</strong>：static{}</p>
+<p><strong>特点</strong>：需要通过static关键字修饰，随着类的加载而加载，并且自动触发、只执行一次</p>
+<p><strong>使用场景</strong>：在类加载的时候做一些静态数据初始化的操作，以便后续使用。</p>
+<p><strong>构造代码块</strong>（<strong>了解，见的少</strong>）：</p>
+<p><strong>格式</strong>：{}</p>
+<p><strong>特点</strong>：每次创建对象，调用构造器执行时，都会执行该代码块中的代码，并且在构造器执行前执行</p>
+<p><strong>使用场景</strong>：初始化实例资源。</p>
+<h3 id="3-静态代码块的应用案例：斗地主游戏"><a href="#3-静态代码块的应用案例：斗地主游戏" class="headerlink" title="3.静态代码块的应用案例：斗地主游戏"></a>3.静态代码块的应用案例：斗地主游戏</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticDemo</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     1.定义一个静态的集合，这样这个集合只加载一个，当前房间只需要一副牌</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;String&gt; cards = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     2.在程序真正运行main方法前，把54张牌放进去，后续游戏可直接使用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">//3.开始做牌，放到集合中去</span></span><br><span class="line">        <span class="comment">//a.定义一个数组存放全部点数：类型确定，个数确定</span></span><br><span class="line">        String[] sizes = &#123;<span class="string">&quot;3&quot;</span>,<span class="string">&quot;4&quot;</span>,<span class="string">&quot;5&quot;</span>,<span class="string">&quot;6&quot;</span>,<span class="string">&quot;7&quot;</span>,<span class="string">&quot;8&quot;</span>,<span class="string">&quot;9&quot;</span>,<span class="string">&quot;J&quot;</span>,<span class="string">&quot;Q&quot;</span>,<span class="string">&quot;K&quot;</span>,<span class="string">&quot;A&quot;</span>,<span class="string">&quot;2&quot;</span>&#125;;</span><br><span class="line">        <span class="comment">//b.定义一个数组存放全部花色：类型确定，个数确定</span></span><br><span class="line">        String[] colors= &#123;<span class="string">&quot;♥&quot;</span>,<span class="string">&quot;♠&quot;</span>,<span class="string">&quot;♦&quot;</span>,<span class="string">&quot;♣&quot;</span>&#125;;</span><br><span class="line">        <span class="comment">//c.遍历</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; sizes.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; colors.length; j++) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">card</span> <span class="operator">=</span> sizes[i] + colors[j];</span><br><span class="line">                cards.add(card);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//d.单独加入大小王</span></span><br><span class="line">        cards.add(<span class="string">&quot;大🃏&quot;</span>);</span><br><span class="line">        cards.add(<span class="string">&quot;小🃏&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//模拟游戏前，初始化54张牌</span></span><br><span class="line">        System.out.println(cards);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>静态代码块的作用是什么?</p>
+<p><strong>如果要在启动系统时对静态资源进行初始化，则建议使用静态代码块完成数据的初始化操作。</strong></p>
+<h3 id="4-static应用知识：单例设计模式"><a href="#4-static应用知识：单例设计模式" class="headerlink" title="4.static应用知识：单例设计模式"></a>4.static应用知识：单例设计模式</h3><p><strong>什么是设计模式（Design pattern）</strong></p>
+<ul>
+<li><p>开发中经常遇到一些问题，一个问题通常有n种解法的，但其中肯定有一种解法是最优的，这个最优的解法被人总结出来了，称之为设计模式。</p>
+</li>
+<li><p>设计模式有20多种，对应20多种软件开发中会遇到的问题。</p>
+</li>
+</ul>
+<p><strong>学设计模式主要是学2点：</strong></p>
+<ul>
+<li><p>这种模式用来解决什么问题。</p>
+</li>
+<li><p>遇到这种问题了，该模式是怎么写的，他是如何解决这个问题的。</p>
+</li>
+</ul>
+<p><strong>单例模式</strong></p>
+<ul>
+<li><p>可以保证系统中，应用该模式的这个类永远只有一个实例，即一个类永远只能创建一个对象。</p>
+</li>
+<li><p>例如任务管理器对象我们只需要一个就可以解决问题了，这样可以节省内存空间。</p>
+</li>
+</ul>
+<h5 id="1-饿汉单例设计模式"><a href="#1-饿汉单例设计模式" class="headerlink" title="1.饿汉单例设计模式"></a>1.<strong>饿汉单例设计模式</strong></h5><p>在用类获取对象的时候，对象已经提前为你创建好了。</p>
+<p><strong>设计步骤：</strong></p>
+<ul>
+<li><p>定义一个类，把构造器私有。</p>
+</li>
+<li><p>定义一个静态变量存储一个对象。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 使用饿汉单例实现单例类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SingleInStance</span> &#123;</span><br><span class="line"><span class="comment">//1.首先把构造器定义私有，藏起来</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleInStance</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//2.饿汉单例是在获取对象前，对象已经提前准备好了一个</span></span><br><span class="line"><span class="comment">//这个对象只能是一个，所以定义静态成员变量记住。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">SingleInStance</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleInStance</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SingleInStance</span> <span class="variable">s1</span> <span class="operator">=</span> SingleInStance.instance;</span><br><span class="line">        <span class="type">SingleInStance</span> <span class="variable">s2</span> <span class="operator">=</span> SingleInStance.instance;</span><br><span class="line">        System.out.println(s1 == s2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-懒汉单例设计模式"><a href="#2-懒汉单例设计模式" class="headerlink" title="2.懒汉单例设计模式"></a>2.懒汉单例设计模式</h5><p>在真正需要该对象的时候，才去创建一个对象(延迟加载对象)。</p>
+<p><strong>设计步骤：</strong></p>
+<ul>
+<li><p>定义一个类，把构造器私有。</p>
+</li>
+<li><p>定义一个静态变量存储一个对象。</p>
+</li>
+<li><p>提供一个返回单例对象的方法。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用懒汉单例实现单例</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SingleInStance2</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     1.首先将构造器私有化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleInStance2</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     2.懒汉单例是指获取对象前，对象已经提前准备好了一个</span></span><br><span class="line"><span class="comment">     这个对象只能是一个，所以定义静态成员变量记住</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleInStance2 inStance;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     3.提供一个方法，对挖返回单例对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> SingleInStance2 <span class="title function_">getInStance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (inStance == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="comment">//第一次来拿对象：此时需要创建对象。</span></span><br><span class="line">            inStance = <span class="keyword">new</span> <span class="title class_">SingleInStance2</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> inStance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SingleInStance2</span> <span class="variable">s1</span> <span class="operator">=</span> SingleInStance2.getInStance();</span><br><span class="line">        <span class="type">SingleInStance2</span> <span class="variable">s2</span> <span class="operator">=</span> SingleInStance2.getInStance();</span><br><span class="line">        System.out.println(s1==s2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B61_1.static%E8%BF%9B%E9%98%B6/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B61_1.static%E8%BF%9B%E9%98%B6/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B61_2.%E7%BB%A7%E6%89%BF/">继承</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E9%98%B6%E6%AE%B5%E6%A1%88%E4%BE%8B%EF%BC%9AATM/">ATM案例</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

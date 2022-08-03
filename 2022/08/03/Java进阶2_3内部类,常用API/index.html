@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java 内部类，常用api | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java 内部类，常用api</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:47:14</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java-内部类，常用api"><a href="#Java-内部类，常用api" class="headerlink" title="Java 内部类，常用api"></a>Java 内部类，常用api</h1><h2 id="一-内部类"><a href="#一-内部类" class="headerlink" title="一.内部类"></a>一.内部类</h2><h3 id="1-内部类概述"><a href="#1-内部类概述" class="headerlink" title="1.内部类概述"></a>1.内部类概述</h3><ul>
+<li>内部类就是定义在一个类里面的类，里面的类可以理解成（寄生），外部类可以理解成（宿主）。</li>
+</ul>
+<p>public class People{<br>   <em>&#x2F;&#x2F;</em> *内部类<br>*   public class Heart{}<br> }</p>
+<p><strong>内部类的使用场景</strong></p>
+<p>场景：当一个事物的内部，还有一个部分需要一个完整的结构进行描述时。</p>
+<p><strong>基本作用</strong></p>
+<ul>
+<li><p>内部类通常可以方便访问外部类的成员，包括私有的成员。</p>
+</li>
+<li><p>内部类提供了更好的封装性，内部类本身就可以用private ，protectecd等修饰，封装性可以做更多控制。</p>
+</li>
+</ul>
+<h3 id="2-内部类：静态内部类"><a href="#2-内部类：静态内部类" class="headerlink" title="2.内部类：静态内部类"></a>2.内部类：静态内部类</h3><p>有static修饰，属于外部类本身。</p>
+<p>它的特点和使用与普通类是完全一样的，类有的成分它都有，只是位置在别人里面而已。</p>
+<p>public class Outer{</p>
+<p>​    &#x2F;&#x2F; 静态成员内部类<br>​     public static class Inner{}<br> }</p>
+<p><strong>静态内部类创建对象的格式：</strong>  </p>
+<p>格式：外部类名.内部类名 对象名 &#x3D; new 外部类名.内部类构造器;<br> 范例：Outer.Inner in &#x3D;  new Outer.Inner();</p>
+<h3 id="3-内部类：成员内部类"><a href="#3-内部类：成员内部类" class="headerlink" title="3.内部类：成员内部类"></a>3.内部类：成员内部类</h3><p>无static修饰，属于外部类的对象。</p>
+<p>JDK16之前，成员内部类中不能定义静态成员，JDK 16开始也可以定义静态成员了。</p>
+<p>public class Outer {<br>   <em>&#x2F;&#x2F;</em> *成员内部类<br>*   public class Inner {}<br> }</p>
+<p><strong>成员内部类创建对象的格式：</strong>  </p>
+<p>格式：外部类名.内部类名 对象名 &#x3D; new  外部类构造器.new 内部类构造器();<br> 范例：Outer.Inner in &#x3D;  new Outer().new Inner();</p>
+<h3 id="4-内部类：局部内部类"><a href="#4-内部类：局部内部类" class="headerlink" title="4.内部类：局部内部类"></a>4.内部类：局部内部类</h3><p>局部内部类放在方法、代码块、构造器等执行体中。</p>
+<p>局部内部类的类文件名为： 外部类$N内部类.class。</p>
+<h3 id="5-内部类：匿名内部类概述★"><a href="#5-内部类：匿名内部类概述★" class="headerlink" title="5.内部类：匿名内部类概述★"></a>5.内部类：匿名内部类概述★</h3><p><strong>匿名内部类：</strong></p>
+<p>本质上是一个没有名字的局部内部类。</p>
+<p><strong>作用</strong>：方便创建子类对象，最终目的是为了简化代码编写。</p>
+<p><strong>格式：</strong></p>
+<p>new 类|抽象类名|或者接口名() {<br>   重写方法;<br> };</p>
+<p>Employee a &#x3D; new Employee() {public void work() {}};<br> a. work();</p>
+<p><strong>特点总结：</strong></p>
+<ul>
+<li><p>匿名内部类是一个没有名字的内部类，同时也代表一个对象。</p>
+</li>
+<li><p>匿名内部类产生的对象类型，相当于是当前new的那个的类型的子类类型。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Animal</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Animal</span>()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;老虎会吃人~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        a.run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//    class Tiger extends Animal&#123;</span></span><br><span class="line"><span class="comment">//        @Override</span></span><br><span class="line"><span class="comment">//        public void run() &#123;</span></span><br><span class="line"><span class="comment">//            System.out.println(&quot;老虎会吃人~~~&quot;);</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Animal</span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-匿名内部类常见使用形式"><a href="#6-匿名内部类常见使用形式" class="headerlink" title="6.匿名内部类常见使用形式"></a>6.匿名内部类常见使用形式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 掌握匿名内部类的使用形式（语法）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Swimming</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Swimming</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;学生开始游泳~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        go(s);</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        go(<span class="keyword">new</span> <span class="title class_">Swimming</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">()</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;老师开始游泳~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">go</span><span class="params">(Swimming s)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;开始~~&quot;</span>);</span><br><span class="line">        s.swim();</span><br><span class="line">        System.out.println(<span class="string">&quot;结束~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Swimming</span>&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>匿名内部类可以作为一个对象，直接传输给方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 通过GUI编程 理解匿名内部类的真实使用场景</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.创建接口</span></span><br><span class="line">        <span class="type">JFrame</span> <span class="variable">win</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JFrame</span>(<span class="string">&quot;登陆界面&quot;</span>);</span><br><span class="line">        <span class="type">JPanel</span> <span class="variable">panel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JPanel</span>();</span><br><span class="line">        win.add(panel);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.创建一个按钮对象</span></span><br><span class="line">        <span class="type">JButton</span> <span class="variable">btn</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JButton</span>(<span class="string">&quot;登陆&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//匿名内部类的使用</span></span><br><span class="line">        <span class="comment">/*btn.addActionListener(new ActionListener() &#123;</span></span><br><span class="line"><span class="comment">            @Override</span></span><br><span class="line"><span class="comment">            public void actionPerformed(ActionEvent e) &#123;</span></span><br><span class="line"><span class="comment">                JOptionPane.showMessageDialog(win,&quot;点一下吧~&quot;);</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;);*/</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//最终简化形式</span></span><br><span class="line">        btn.addActionListener( e -&gt; JOptionPane.showMessageDialog(win,<span class="string">&quot;别点了~&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.把按钮对象添加到窗口上显示</span></span><br><span class="line">        panel.add(btn);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.展示窗口</span></span><br><span class="line">        win.setSize(<span class="number">400</span>,<span class="number">300</span>);</span><br><span class="line">        win.setLocationRelativeTo(<span class="literal">null</span>);</span><br><span class="line">        win.setVisible(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>匿名内部类通常是在开发中调用别人的方法时，别人需要我们写的时候才会定义出来使用。</p>
+<p>匿名内部类还可以实现进一步的简化代码</p>
+<h2 id="二-常用API"><a href="#二-常用API" class="headerlink" title="二.常用API"></a>二.常用API</h2><h3 id="1-API概述"><a href="#1-API概述" class="headerlink" title="1.API概述"></a>1.API概述</h3><ul>
+<li><p>API(Application Programming interface) 应用程序编程接口。</p>
+</li>
+<li><p>简单来说：就是Java帮我们已经写好的一些方法，我们直接拿过来用就可以了</p>
+</li>
+</ul>
+<h3 id="2-Object类：toString方法"><a href="#2-Object类：toString方法" class="headerlink" title="2.Object类：toString方法"></a>2.Object类：toString方法</h3><p><strong>Object类的作用：</strong></p>
+<ul>
+<li><p>一个类要么默认继承了Object类，要么间接继承了Object类，Object类是Java中的祖宗类。</p>
+</li>
+<li><p>Object作为所有类的父类，提供了很多常用的方法给每个子类对象拿来使用。</p>
+</li>
+</ul>
+<p><strong>Object类的常用方法：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String toString()</td>
+<td>默认是返回当前对象在堆内存中的地址信息:类的全限名@内存地址</td>
+</tr>
+<tr>
+<td>public boolean equals(Object o)</td>
+<td>默认是比较当前对象与另一个对象的地址是否相同，相同返回true，不同返回false</td>
+</tr>
+</tbody></table>
+<p><strong>Object的toString方法：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String toString()</td>
+<td>默认是返回当前对象在堆内存中的地址信息:类的全限名@内存地址</td>
+</tr>
+</tbody></table>
+<p><strong>toString</strong>存在的意义</p>
+<p>父类toString()方法存在的意义就是为了被子类重写，以便返回对象的内容信息，而不是地址信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">char</span> sex;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name, <span class="type">char</span> sex, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.sex = sex;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;<span class="keyword">return</span> name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;<span class="built_in">this</span>.name = name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> <span class="title function_">getSex</span><span class="params">()</span> &#123;<span class="keyword">return</span> sex;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSex</span><span class="params">(<span class="type">char</span> sex)</span> &#123;<span class="built_in">this</span>.sex = sex;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;<span class="keyword">return</span> age;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;<span class="built_in">this</span>.age = age;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, sex=&quot;</span> + sex +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">22</span>);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Object类：equals方法"><a href="#3-Object类：equals方法" class="headerlink" title="3.Object类：equals方法"></a>3.Object类：equals方法</h3><p><strong>Object的equals方法：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean equals(Object o)</td>
+<td>默认是比较当前对象与另一个对象的地址是否相同，相同返回true，不同返回false</td>
+</tr>
+</tbody></table>
+<p><strong>equals存在的意义：</strong></p>
+<ul>
+<li>为了被子类重写，以便子类自己来定制比较规则（比如比较对象内容）。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="type">Student</span> <span class="variable">student</span> <span class="operator">=</span> (Student) o;</span><br><span class="line">    <span class="keyword">return</span> sex == student.sex &amp;&amp; age == student.age &amp;&amp; Objects.equals(name, student.name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Student</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">22</span>);</span><br><span class="line"><span class="type">Student</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">22</span>);</span><br><span class="line"><span class="type">Student</span> <span class="variable">s3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">23</span>);</span><br><span class="line">System.out.println(s1);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line">System.out.println(s1.equals(s3));</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Objects"><a href="#4-Objects" class="headerlink" title="4.Objects"></a>4.Objects</h3><p>Objects是一个工具类，提供了一些方法去完成一些功能。</p>
+<p>官方在进行字符串比较时，没有用字符串对象的的equals方法，而是选择了Objects的equals方法来比较。</p>
+<p><strong>使用Objects的equals方法在进行对象的比较会更安全。</strong></p>
+<p><strong>Objects的常见方法：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  static boolean equals(Object a,  Object b)</td>
+<td>比较两个对象的，底层会先进行非空判断，从而可以避免空指针异常。再进行equals比较</td>
+</tr>
+<tr>
+<td>public  static boolean isNull(Object obj)</td>
+<td>判断变量是否为null  ,为null返回true  ,反之</td>
+</tr>
+</tbody></table>
+<p>对象进行<strong>内容比较</strong>的时候建议<strong>使用Objects提供的equals方法</strong>，比较的结果是一样的，但是更安全。</p>
+<h3 id="5-StringBuilder"><a href="#5-StringBuilder" class="headerlink" title="5.StringBuilder"></a>5.StringBuilder</h3><p><strong>StringBuilder概述：</strong></p>
+<ul>
+<li><p>StringBuilder是一个可变的字符串的操作类，我们可以把它看成是一个对象容器。</p>
+</li>
+<li><p>使用StringBuilder的核心作用：操作字符串的性能比String要更高（如拼接、修改等）。</p>
+</li>
+</ul>
+<p><strong>StringBuilder</strong> <strong>构造器</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  StringBuilder()</td>
+<td>创建一个空白的可变的字符串对象，不包含任何内容</td>
+</tr>
+<tr>
+<td>public  StringBuilder(String str)</td>
+<td>创建一个指定字符串内容的可变字符串对象</td>
+</tr>
+</tbody></table>
+<p><strong>StringBuilder</strong>常用方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public StringBuilder append(任意类型)</td>
+<td>添加数据并返回StringBuilder对象本身</td>
+</tr>
+<tr>
+<td>public StringBuilder reverse()</td>
+<td>将对象的内容反转</td>
+</tr>
+<tr>
+<td>public int length()</td>
+<td>返回对象内容长度</td>
+</tr>
+<tr>
+<td>public String toString()</td>
+<td>通过toString()就可以实现把StringBuilder转换为String</td>
+</tr>
+</tbody></table>
+<p><strong>StringBuilder</strong>：内容是可变的、拼接字符串性能好、代码优雅。</p>
+<p><strong>String</strong> <strong>：内容是不可变的、拼接字符串性能差。</strong></p>
+<p>注意事项：</p>
+<ul>
+<li><p><strong>定义字符串使用</strong>String</p>
+</li>
+<li><p><strong>拼接、修改等操作字符串使用</strong>StringBuilder</p>
+</li>
+</ul>
+<p><strong>案例：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//打印整型数组内容</span></span><br><span class="line"><span class="comment">//        需求：</span></span><br><span class="line"><span class="comment">//        设计一个方法用于输出任意整型数组的内容，要求输出成如下格式：</span></span><br><span class="line"><span class="comment">//        “该数组内容为：[11, 22, 33, 44, 55]”</span></span><br><span class="line"><span class="comment">//        分析：</span></span><br><span class="line"><span class="comment">//        1、定义一个方法，要求该方法能够接收数组，并输出数组内容。 ---&gt; 需要参数吗？需要返回值类型申明吗？</span></span><br><span class="line"><span class="comment">//        2、定义一个静态初始化的数组，调用该方法，并传入该数组。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> [] arr = <span class="literal">null</span>;</span><br><span class="line">        <span class="type">int</span> [] arr1 = &#123;<span class="number">11</span>,<span class="number">22</span>,<span class="number">33</span>&#125;;</span><br><span class="line">        <span class="type">int</span> [] arr2 = &#123;&#125;;</span><br><span class="line">        System.out.println(toString(arr));</span><br><span class="line">        System.out.println(toString(arr1));</span><br><span class="line">        System.out.println(toString(arr2));</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//1.定义方法接受任意整型数组，返回数组内容格式</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">toString</span><span class="params">(<span class="type">int</span>[] arr)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (arr != <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="comment">//2.开始拼接</span></span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;[&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">                sb.append(arr[i]).append(i == arr.length - <span class="number">1</span> ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;,&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.append(<span class="string">&quot;]&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> sb.toString();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B62_3%E5%86%85%E9%83%A8%E7%B1%BB,%E5%B8%B8%E7%94%A8API/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B62_3%E5%86%85%E9%83%A8%E7%B1%BB,%E5%B8%B8%E7%94%A8API/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B62_4%E5%8C%85%E8%A3%85%E7%B1%BB%EF%BC%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Java时间与日期，包装类，正则表达式</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B62_2.%E6%8E%A5%E5%8F%A3,%E5%A4%9A%E6%80%81/">Java_接口和多态</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

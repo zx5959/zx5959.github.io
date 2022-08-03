@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java进阶，不可变集合，Stream流 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java进阶，不可变集合，Stream流</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:50:25</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java进阶，不可变集合，Stream流"><a href="#Java进阶，不可变集合，Stream流" class="headerlink" title="Java进阶，不可变集合，Stream流"></a>Java进阶，不可变集合，Stream流</h1><h2 id="一-不可变集合"><a href="#一-不可变集合" class="headerlink" title="一.不可变集合"></a>一.不可变集合</h2><ul>
+<li><p>不可变集合，就是不可被修改的集合。</p>
+</li>
+<li><p>集合的数据项在创建的时候提供，并且在整个生命周期中都不可改变。否则报错。</p>
+</li>
+<li><p>如果某个数据不能被修改，把它防御性地拷贝到不可变集合中是个很好的实践。</p>
+</li>
+<li><p>或者当集合对象被不可信的库调用时，不可变形式是安全的。</p>
+</li>
+</ul>
+<p><strong>如何创建不可变集合？</strong></p>
+<ul>
+<li>在List、Set、Map接口中，都存在of方法，可以创建一个不可变的集合。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>static  <E> List<E> of(E…elements)</td>
+<td>创建一个具有指定元素的List集合对象</td>
+</tr>
+<tr>
+<td>static  <E> Set<E> of(E…elements)</td>
+<td>创建一个具有指定元素的Set集合对象</td>
+</tr>
+<tr>
+<td>static &lt;K  , V&gt;  Map&lt;K，V&gt; of(E…elements)</td>
+<td>创建一个具有指定元素的Map集合对象</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>这个集合不能添加，不能删除，不能修改。</p>
+</li>
+<li></li>
+<li><p>&#96;&#96;&#96;java<br>public class Demo {<br>public static void main(String[] args) {<br>    &#x2F;&#x2F;1.不可变的List集合<br>    List<Double> lists &#x3D; List.of(569.0, 314.4, 456.3);<br>    &#x2F;&#x2F;lists.add(434.4);报错<br>    &#x2F;&#x2F;lists.set(2,311.1);报错<br>    double score &#x3D; lists.get(0);<br>    System.out.println(score);<br><br>    &#x2F;&#x2F;2.不可变的Set集合<br>    Set<String> names &#x3D; Set.of(“刘备”, “关羽”, “张飞”, “卧龙”, “凤雏”);<br>    &#x2F;&#x2F;names.add(“大小姐”);报错<br>    System.out.println(names);<br><br>    &#x2F;&#x2F;3.不可变的Map<br>    Map&lt;String, Integer&gt; maps &#x3D; Map.of(“华为”,2,”小米”,3,”苹果”,4);<br>    &#x2F;&#x2F;maps.put(“vivo”,2);报错<br>    System.out.println(maps);<br>}<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 二.Stream流</span><br><span class="line"></span><br><span class="line">### 1.Stream流的概述</span><br><span class="line"></span><br><span class="line">- 在Java 8中，得益于Lambda所带来的函数式编程， 引入了一个全新的Stream流概念。</span><br><span class="line">- **目的**：用于简化集合和数组操作的API。</span><br><span class="line"></span><br><span class="line">**Stream流式思想的核心**：</span><br><span class="line"></span><br><span class="line">1.先得到集合或者数组的Stream流（就是一根传送带）</span><br><span class="line"></span><br><span class="line">2.把元素放上去</span><br><span class="line"></span><br><span class="line">3.然后就用这个Stream流简化的API来方便的操作元素。</span><br><span class="line"></span><br><span class="line">### 2.Stream流的获取</span><br><span class="line"></span><br><span class="line">**Stream**操作集合或者数组的第一步是先得到**Stream**流，然后才能使用流的功能。</span><br><span class="line"></span><br><span class="line">**集合获取**Stream流的方式</span><br><span class="line"></span><br><span class="line">- 可以使用Collection接口中的默认方法stream()生成流</span><br><span class="line"></span><br><span class="line">| 名称                        | 说明                       |</span><br><span class="line">| --------------------------- | -------------------------- |</span><br><span class="line">| default  Stream&lt;E&gt; stream() | 获取当前集合对象的Stream流 |</span><br><span class="line"></span><br><span class="line">**数组获取**Stream流的方式</span><br><span class="line"></span><br><span class="line">| 名称                                              | 说明                            |</span><br><span class="line">| ------------------------------------------------- | ------------------------------- |</span><br><span class="line">| public  static &lt;T&gt;  Stream&lt;T&gt;  stream(T[]  array) | 获取当前数组的Stream流          |</span><br><span class="line">| public  static&lt;T&gt;  Stream&lt;T&gt;  of(T...  values)    | 获取当前数组/可变数据的Stream流 |</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public class StreamDemo &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        //Collection集合获取流</span><br><span class="line">        Collection&lt;String&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line">        Stream&lt;String&gt; s = list.stream();</span><br><span class="line"></span><br><span class="line">        //Map集合获取流</span><br><span class="line">        Map&lt;String, Integer&gt; maps = new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        //键流</span><br><span class="line">        Stream&lt;String&gt; keyStream = maps.keySet().stream();</span><br><span class="line">        //值流</span><br><span class="line">        Stream&lt;Integer&gt; valueStream = maps.values().stream();</span><br><span class="line">        //键值对流（拿整体）</span><br><span class="line">        Stream&lt;Map.Entry&lt;String,Integer&gt;&gt; keyAndvalueStream = maps.entrySet().stream();</span><br><span class="line"></span><br><span class="line">        //数组获取流</span><br><span class="line">        String[] names = &#123;&quot;刘备&quot;,&quot;关羽&quot;,&quot;张飞&quot;,&quot;卧龙&quot;&#125;;</span><br><span class="line">        Stream&lt;String&gt; nameStream = Arrays.stream(names);</span><br><span class="line">        Stream&lt;String&gt; nameStream1 = Stream.of(names);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>Stream</strong>流的三类方法</p>
+<p><strong>获取Stream流</strong></p>
+<ul>
+<li>创建一条流水线，并把数据放到流水线上准备进行操作</li>
+</ul>
+<p><strong>中间方法</strong></p>
+<ul>
+<li>流水线上的操作。一次操作完毕之后，还可以继续进行其他操作。</li>
+</ul>
+<p><strong>终结方法</strong></p>
+<ul>
+<li>一个Stream流只能有一个终结方法，是流水线上的最后一个操作</li>
+</ul>
+<h3 id="3-Stream流常用API"><a href="#3-Stream流常用API" class="headerlink" title="3.Stream流常用API"></a>3.Stream流常用API</h3><p><strong>Stream流的常用API(中间操作方法)</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stream<T>  filter(Predicate&lt;?  super  T&gt;  predicate)</td>
+<td>用于对流中的数据进行<strong>过滤。</strong></td>
+</tr>
+<tr>
+<td>Stream<T>  limit(long maxSize)</td>
+<td>获取前几个元素</td>
+</tr>
+<tr>
+<td>Stream<T>  skip(long n)</td>
+<td>跳过前几个元素</td>
+</tr>
+<tr>
+<td>Stream<T>  distinct()</td>
+<td>去除流中重复的元素。依赖(hashCode和equals方法)</td>
+</tr>
+<tr>
+<td>static  <T> Stream<T> concat(Stream  a, Stream b)</td>
+<td><strong>合并</strong>a和b两个流为一个流</td>
+</tr>
+</tbody></table>
+<p><strong>注意：</strong></p>
+<ul>
+<li>中间方法也称为非终结方法，调用完成后返回新的Stream流可以继续使用，支持链式编程。</li>
+<li><strong>在Stream流中无法直接修改集合、数组中的数据。</strong></li>
+</ul>
+<p><strong>Stream</strong>流的常见<strong>终结</strong>操作方法</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void  forEach(Consumer action)</td>
+<td>对此流的每个元素执行遍历操作</td>
+</tr>
+<tr>
+<td>long count()</td>
+<td>返回此流中的元素数</td>
+</tr>
+</tbody></table>
+<p><strong>注意：终结操作方法，调用完成后流就无法继续使用了，原因是不会返回</strong>Stream了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StreamDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Collections.addAll(list, <span class="string">&quot;张无忌&quot;</span>,<span class="string">&quot;周芷若&quot;</span>,<span class="string">&quot;赵敏&quot;</span>,<span class="string">&quot;张强&quot;</span>,<span class="string">&quot;张三丰&quot;</span>,<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.filter : 过滤元素</span></span><br><span class="line">        <span class="comment">//          Stream&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate);</span></span><br><span class="line"><span class="comment">//        list.stream().filter(s -&gt; s.startsWith(&quot;张&quot;)).forEach(s -&gt; System.out.println(s));</span></span><br><span class="line">        list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>)).forEach(System.out::println);</span><br><span class="line">        <span class="comment">//简化形式</span></span><br><span class="line"></span><br><span class="line">        System.out.println(list.stream().filter(s -&gt; s.length() == <span class="number">3</span>).count());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.Limit：取前几个元素</span></span><br><span class="line"><span class="comment">//        list.stream().filter(s -&gt; s.startsWith(&quot;张&quot;)).limit(2).forEach(s -&gt; System.out.println(s));</span></span><br><span class="line">        list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>)).limit(<span class="number">2</span>).forEach(System.out::println);</span><br><span class="line">        <span class="comment">//简化形式</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.skip:跳过前面几个</span></span><br><span class="line">        list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>)).skip(<span class="number">2</span>).forEach(System.out::println);</span><br><span class="line">        System.out.println(<span class="string">&quot;-------------------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.map：加工方法.:第一个参数原材料——》第二个参数是加工后的结果</span></span><br><span class="line">        <span class="comment">//需求：给集合元素的前面都加上：倚天屠龙记</span></span><br><span class="line">        list.stream().map(s -&gt; <span class="string">&quot;倚天屠龙记的&quot;</span> + s).forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//需求：把所有的名称都加工成一个学生对象</span></span><br><span class="line">        list.stream().map(s -&gt; <span class="keyword">new</span> <span class="title class_">Student</span>(s)).forEach(s -&gt; System.out.println(s));</span><br><span class="line">        <span class="comment">//list.stream().map(Student::new).forEach(System.out::println);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//5.合并流</span></span><br><span class="line">        Stream&lt;String&gt; s1 = list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>));</span><br><span class="line">        Stream&lt;String&gt; s2 = Stream.of(<span class="string">&quot;Java1&quot;</span>,<span class="string">&quot;Java2&quot;</span>);</span><br><span class="line">        Stream&lt;String&gt; s3 = Stream.concat(s1, s2);</span><br><span class="line">        s3.forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//6.去掉重复的</span></span><br><span class="line">        <span class="comment">//s3.distinct().forEach(System.out::println);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-案例标题"><a href="#4-案例标题" class="headerlink" title="4.案例标题"></a>4.案例标题</h3><p>需求：某个公司的开发部门，分为开发一部和二部，现在需要进行年中数据结算。</p>
+<p>分析：</p>
+<p>①：员工信息至少包含了(名称、性别、工资、奖金、处罚记录)</p>
+<p>②：开发一部有4个员工、开发二部有5名员工</p>
+<p>③：分别筛选出2个部门的最高工资的员工信息，封装成优秀员工对象Topperformer</p>
+<p>④：分别统计出2个部门的平均月收入，要求去掉最高和最低工资。</p>
+<p>⑤：统计2个开发部门整体的平均工资，去掉最低和最高工资的平均值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Employee</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">char</span> sex;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> salary;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> bonus;</span><br><span class="line">    <span class="keyword">private</span> String punish;<span class="comment">//处罚信息</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Employee</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Employee</span><span class="params">(String name, <span class="type">char</span> sex, <span class="type">double</span> salary, <span class="type">double</span> bonus, String punish)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.sex = sex;</span><br><span class="line">        <span class="built_in">this</span>.salary = salary;</span><br><span class="line">        <span class="built_in">this</span>.bonus = bonus;</span><br><span class="line">        <span class="built_in">this</span>.punish = punish;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;<span class="keyword">return</span> name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;<span class="built_in">this</span>.name = name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">char</span> <span class="title function_">getSex</span><span class="params">()</span> &#123;<span class="keyword">return</span> sex;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSex</span><span class="params">(<span class="type">char</span> sex)</span> &#123;<span class="built_in">this</span>.sex = sex;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getSalary</span><span class="params">()</span> &#123;<span class="keyword">return</span> salary;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSalary</span><span class="params">(<span class="type">double</span> salary)</span> &#123;<span class="built_in">this</span>.salary = salary;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getBonus</span><span class="params">()</span> &#123;<span class="keyword">return</span> bonus;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBonus</span><span class="params">(<span class="type">double</span> bonus)</span> &#123;<span class="built_in">this</span>.bonus = bonus;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPunish</span><span class="params">()</span> &#123;<span class="keyword">return</span> punish;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPunish</span><span class="params">(String punish)</span> &#123;<span class="built_in">this</span>.punish = punish;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Employee&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, sex=&quot;</span> + sex +</span><br><span class="line">                <span class="string">&quot;, salary=&quot;</span> + salary +</span><br><span class="line">                <span class="string">&quot;, bonus=&quot;</span> + bonus +</span><br><span class="line">                <span class="string">&quot;, punish=&#x27;&quot;</span> + punish + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Topperformer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> money;<span class="comment">//月薪</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Topperformer</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Topperformer</span><span class="params">(String name, <span class="type">double</span> money)</span> &#123;<span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.money = money;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;<span class="keyword">return</span> name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;<span class="built_in">this</span>.name = name;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getMoney</span><span class="params">()</span> &#123;<span class="keyword">return</span> money;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMoney</span><span class="params">(<span class="type">double</span> money)</span> &#123;<span class="built_in">this</span>.money = money;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Topperformer&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, money=&quot;</span> + money +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StreamDemo2</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> allMoney;<span class="comment">//开发一部</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> allMoney2;<span class="comment">//开发二部</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> allMoney3;<span class="comment">//总共</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;Employee&gt; one = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        one.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;猪八戒&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">30000</span>,<span class="number">25000</span>,<span class="literal">null</span>));</span><br><span class="line">        one.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;孙悟空&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">25000</span>,<span class="number">1000</span>,<span class="string">&quot;顶撞上司&quot;</span>));</span><br><span class="line">        one.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;沙僧&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">20000</span>,<span class="number">20000</span>,<span class="literal">null</span>));</span><br><span class="line">        one.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;小白龙&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">20000</span>,<span class="number">25000</span>,<span class="literal">null</span>));</span><br><span class="line"></span><br><span class="line">        List&lt;Employee&gt; two = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        two.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;武松&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">15000</span>,<span class="number">9000</span>,<span class="literal">null</span>));</span><br><span class="line">        two.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;李逵&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">20000</span>,<span class="number">10000</span>,<span class="literal">null</span>));</span><br><span class="line">        two.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;西门庆&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">50000</span>,<span class="number">100000</span>,<span class="string">&quot;被揍&quot;</span>));</span><br><span class="line">        two.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;潘金莲&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">3500</span>,<span class="number">1000</span>,<span class="string">&quot;被揍&quot;</span>));</span><br><span class="line">        two.add(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;武大朗&quot;</span>,<span class="string">&#x27;男&#x27;</span>,<span class="number">20000</span>,<span class="number">0</span>,<span class="string">&quot;中毒&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.筛选出工资最高的员工信息，封装成优秀员工对象Topperformer</span></span><br><span class="line"><span class="comment">//        Employee e = one.stream().max((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus())).get();</span></span><br><span class="line"><span class="comment">//        System.out.println(e);</span></span><br><span class="line">        <span class="type">Topperformer</span> <span class="variable">t</span> <span class="operator">=</span> one.stream().max((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus()))</span><br><span class="line">                .map(e -&gt; <span class="keyword">new</span> <span class="title class_">Topperformer</span>(e.getName(),e.getSalary()+e.getBonus())).get();</span><br><span class="line">        System.out.println(t);</span><br><span class="line"></span><br><span class="line">        <span class="type">Topperformer</span> <span class="variable">t1</span> <span class="operator">=</span> two.stream().max((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus()))</span><br><span class="line">                .map(e -&gt; <span class="keyword">new</span> <span class="title class_">Topperformer</span>(e.getName(),e.getSalary()+e.getBonus())).get();</span><br><span class="line">        System.out.println(t1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.统计出2个部门的平均月收入，要求去掉最高和最低工资</span></span><br><span class="line">        one.stream().sorted((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus()))</span><br><span class="line">                .skip(<span class="number">1</span>).limit(one.size() - <span class="number">2</span>).forEach(e -&gt; &#123;</span><br><span class="line">                    <span class="comment">//求出总和：剩余员工的工资总和</span></span><br><span class="line">            allMoney += (e.getSalary() + e.getBonus());</span><br><span class="line">        &#125; );</span><br><span class="line">        System.out.println(<span class="string">&quot;开发一部的平均工资：&quot;</span> + allMoney / (one.size() - <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">        two.stream().sorted((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus()))</span><br><span class="line">                .skip(<span class="number">1</span>).limit(two.size() - <span class="number">2</span>).forEach(e -&gt; &#123;</span><br><span class="line">                    allMoney2 += (e.getSalary() + e.getBonus());</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(<span class="string">&quot;开发二部的平均工资：&quot;</span> + allMoney2 / (two.size() - <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.合并2个集合流，再统计</span></span><br><span class="line">        Stream&lt;Employee&gt; s1 = one.stream();</span><br><span class="line">        Stream&lt;Employee&gt; s2 = two.stream();</span><br><span class="line">        Stream&lt;Employee&gt; s3 = Stream.concat(s1,s2);</span><br><span class="line">        s3.sorted((e1,e2) -&gt; Double.compare(e1.getSalary() + e1.getBonus(), e2.getSalary() + e2.getBonus()))</span><br><span class="line">                .skip(<span class="number">1</span>).limit(one.size() + two.size() - <span class="number">2</span>).forEach(e -&gt; &#123;</span><br><span class="line">            <span class="comment">//求和：剩余员工的工资总和</span></span><br><span class="line">            allMoney3 += (e.getSalary() +e.getBonus());</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">//BigDecimal 使运算更精确</span></span><br><span class="line">        <span class="type">BigDecimal</span> <span class="variable">a</span> <span class="operator">=</span> BigDecimal.valueOf(allMoney3);</span><br><span class="line">        <span class="type">BigDecimal</span> <span class="variable">b</span> <span class="operator">=</span> BigDecimal.valueOf(one.size() + two.size() - <span class="number">2</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;开发部的平均工资是：&quot;</span> + a.divide(b,<span class="number">2</span>, RoundingMode.HALF_UP));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-收集Stream流"><a href="#5-收集Stream流" class="headerlink" title="5.收集Stream流"></a>5.收集Stream流</h3><p>Stream流的收集操作</p>
+<ul>
+<li><strong>收集Stream流的含义</strong>：就是把Stream流操作后的结果数据转回到集合或者数组中去。</li>
+<li>Stream流：方便操作集合&#x2F;数组的<strong>手段。</strong></li>
+<li>集合&#x2F;数组：才是开发中的<strong>目的</strong>。</li>
+</ul>
+<p><strong>Stream</strong>流的收集方法</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R collect(Collector collector)</td>
+<td>开始收集Stream流，指定收集器</td>
+</tr>
+</tbody></table>
+<p><strong>Collectors</strong>工具类提供了具体的收集方式</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public static <T> Collector toList()</td>
+<td>把元素收集到List集合中</td>
+</tr>
+<tr>
+<td>public static <T> Collector toSet()</td>
+<td>把元素收集到Set集合中</td>
+</tr>
+<tr>
+<td>public static Collector toMap(Function keyMapper  , Function valueMapper)</td>
+<td>把元素收集到Map集合中</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StreamDemo3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Collections.addAll(list,<span class="string">&quot;张无忌&quot;</span>,<span class="string">&quot;周芷若&quot;</span>,<span class="string">&quot;赵敏&quot;</span>,<span class="string">&quot;张三丰&quot;</span>,<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"></span><br><span class="line">        Stream&lt;String&gt; s1 = list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>));</span><br><span class="line">        List&lt;String&gt; zhangList = s1.collect(Collectors.toList());</span><br><span class="line">        System.out.println(zhangList);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//注意：&quot;流只能使用一次&quot;</span></span><br><span class="line">        Stream&lt;String&gt; s2 = list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>));</span><br><span class="line">        Set&lt;String&gt; zhangSet = s2.collect(Collectors.toSet());</span><br><span class="line">        System.out.println(zhangSet);</span><br><span class="line"></span><br><span class="line">        Stream&lt;String&gt; s3 = list.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>));</span><br><span class="line">        Object[] arrs = s3.toArray();</span><br><span class="line">        <span class="comment">//String[] arrs1 = s3.toArray(String[]::new);</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Arrays数组内容：&quot;</span> + Arrays.toString(arrs));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-异常"><a href="#三-异常" class="headerlink" title="三.异常"></a>三.异常</h2><h3 id="1-异常概述、体系"><a href="#1-异常概述、体系" class="headerlink" title="1.异常概述、体系"></a>1.异常概述、体系</h3><p><strong>什么是异常？</strong></p>
+<ul>
+<li>异常是程序在“编译”或者“执行”的过程中可能出现的问题，<strong>注意：</strong>语法错误不算在异常体系中。 </li>
+<li>比如:数组索引越界、空指针异常、 日期格式化异常，等…</li>
+</ul>
+<p><strong>为什么要学习异常</strong>?</p>
+<ul>
+<li>异常一旦出现了，如果没有提前处理，程序就会退出JVM虚拟机而终止.</li>
+<li>研究异常并且避免异常，然后提前处理异常，体现的是程序的安全, 健壮性。</li>
+</ul>
+<p><strong>异常体系</strong></p>
+<p><strong>Error</strong>：</p>
+<p>系统级别问题、JVM退出等，代码无法控制。</p>
+<p><strong>Exception</strong>：java.lang包下，称为异常类，它表示程序本身可以处理的问题</p>
+<ul>
+<li><strong>RuntimeException</strong>及其子类：运行时异常，编译阶段不会报错。 (空指针异常，数组索引越界异常) </li>
+<li><strong>除</strong>RuntimeException之外所有的异常：编译时异常，编译期必须处理的，否则程序不能通过编译。 (日期格式化异常)。</li>
+</ul>
+<p>编译时异常就是在编译的时候出现的异常，</p>
+<p>运行时异常就是在运行时出现的异常。</p>
+<h3 id="2-常见运行时异常"><a href="#2-常见运行时异常" class="headerlink" title="2.常见运行时异常"></a>2.常见运行时异常</h3><p><strong>运行时异常</strong></p>
+<ul>
+<li><strong>直接继承自</strong>RuntimeException<strong>或者其子类，</strong>编译阶段不会报错，运行时可能出现的错误。</li>
+</ul>
+<p><strong>运行时异常示例</strong></p>
+<ul>
+<li>数组索引越界异常: ArrayIndexOutOfBoundsException</li>
+<li>空指针异常 : NullPointerException，直接输出没有问题，但是调用空指针的变量的功能就会报错。</li>
+<li>数学操作异常：ArithmeticException</li>
+<li>类型转换异常：ClassCastException</li>
+<li>数字转换异常： NumberFormatException</li>
+</ul>
+<h3 id="3-常见编译时异常"><a href="#3-常见编译时异常" class="headerlink" title="3.常见编译时异常"></a>3.常见编译时异常</h3><p><strong>编译时异常</strong></p>
+<ul>
+<li><strong>不是</strong>RuntimeException<strong>或者</strong>其子类的异常，编译阶就报错，必须处理，否则代码不通过。</li>
+</ul>
+<h3 id="4-异常的默认处理流程"><a href="#4-异常的默认处理流程" class="headerlink" title="4.异常的默认处理流程"></a>4.异常的默认处理流程</h3><p>①默认会在出现异常的代码那里自动的创建一个异常对象：ArithmeticException。</p>
+<p>②异常会从方法中出现的点这里抛出给调用者，调用者最终抛出给JVM虚拟机。</p>
+<p>③虚拟机接收到异常对象后，先在控制台直接输出异常栈信息数据。</p>
+<p>④直接从当前执行的异常点干掉当前程序。</p>
+<p>⑤后续代码没有机会执行了，因为程序已经死亡。</p>
+<h3 id="5-编译时异常的处理机制"><a href="#5-编译时异常的处理机制" class="headerlink" title="5.编译时异常的处理机制"></a>5.编译时异常的处理机制</h3><p>编译时异常是编译阶段就出错的，所以必须处理，否则代码根本无法通过</p>
+<p><strong>编译时异常的处理形式有三种：</strong></p>
+<ul>
+<li>出现异常直接抛出去给调用者，调用者也继续抛出去。</li>
+<li>出现异常自己捕获处理，不麻烦别人。</li>
+<li>前两者结合，出现异常直接抛出去给调用者，调用者捕获处理。</li>
+</ul>
+<p><strong>异常处理方式</strong>1 <strong>—— throws</strong></p>
+<ul>
+<li>throws：用在方法上，可以将方法内部出现的异常抛出去给本方法的调用者处理。</li>
+<li>这种方式并不好，发生异常的方法自己不处理异常，如果异常最终抛出去给虚拟机将引起程序死亡。</li>
+</ul>
+<p><strong>抛出异常格式：</strong>方法 throws 异常1 ，异常2 ，异常3 ..{}</p>
+<p><strong>规范做法</strong>： 方法 throws Exception{ }</p>
+<ul>
+<li>代表可以抛出一切异常，</li>
+</ul>
+<p><strong>异常处理方式</strong>2 <strong>—— try…catch…</strong></p>
+<ul>
+<li>监视捕获异常，用在方法内部，可以将方法内部出现的异常直接捕获处理。</li>
+<li>这种方式还可以，发生异常的方法自己独立完成异常的处理，程序可以继续往下执行。</li>
+</ul>
+<p><strong>格式：</strong>  try{<br>    *&#x2F;&#x2F; 监视可能出现异常的代码！<br>*  }catch(异常类型1 变量){<br>    *&#x2F;&#x2F; 处理异常<br>*  }catch(异常类型2 变量){<br>    *&#x2F;&#x2F; 处理异常<br>*  }…</p>
+<p><strong>建议格式：</strong>try{<br>   *&#x2F;&#x2F; 可能出现异常的代码！<br>* }catch (Exception e){<br>   e.printStackTrace(); *&#x2F;&#x2F; 直接打印异常栈信息<br>* }<br> Exception可以捕获处理一切异常类型！</p>
+<p><strong>异常处理方式</strong>3 <strong>——</strong> <strong>前两者结合</strong></p>
+<ul>
+<li>方法直接将异通过throws抛出去给调用者</li>
+<li>调用者收到异常后直接捕获处理。</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B65%EF%BC%8C%E4%B8%8D%E5%8F%AF%E5%8F%98%E9%9B%86%E5%90%88%EF%BC%8CStream%E6%B5%81/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B65%EF%BC%8C%E4%B8%8D%E5%8F%AF%E5%8F%98%E9%9B%86%E5%90%88%EF%BC%8CStream%E6%B5%81/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B66%EF%BC%8Cfile%E7%B1%BB%EF%BC%8CIO%E6%B5%81/">Java进阶，file类，IO流</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B64%EF%BC%8CSet%E9%9B%86%E5%90%88%EF%BC%8CMap%E9%9B%86%E5%90%88/">Java进阶，Set集合，Map集合</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

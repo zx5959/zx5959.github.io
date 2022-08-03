@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>Java时间与日期，包装类，正则表达式 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java时间与日期，包装类，正则表达式</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:48:06</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java时间与日期，包装类，正则表达式"><a href="#Java时间与日期，包装类，正则表达式" class="headerlink" title="Java时间与日期，包装类，正则表达式"></a>Java时间与日期，包装类，正则表达式</h1><h2 id="一-时间与日期"><a href="#一-时间与日期" class="headerlink" title="一.时间与日期"></a>一.时间与日期</h2><h3 id="1-Date"><a href="#1-Date" class="headerlink" title="1.Date"></a>1.Date</h3><p><strong>Date类概述</strong></p>
+<ul>
+<li>Date类代表当前所在系统的日期时间信息。</li>
+</ul>
+<p><strong>Date的构造器</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Date()</td>
+<td>创建一个Date对象，代表的是系统当前此刻日期时间。</td>
+</tr>
+</tbody></table>
+<p><strong>Date的常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public long getTime()</td>
+<td>返回从1970年1月1日   00:00:00走到此刻的总的毫秒数</td>
+</tr>
+</tbody></table>
+<p><strong>案例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 学会使用Date类处理时间，获取时间的信息</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.创建一个Date类的对象，代表系统此时日期时间对象</span></span><br><span class="line">        <span class="type">Date</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        System.out.println(d);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.获取时间毫秒值</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> d.getTime();</span><br><span class="line">        System.out.println(time);</span><br><span class="line"><span class="comment">//        long time1 = System.currentTimeMillis();</span></span><br><span class="line"><span class="comment">//        System.out.println(time1);</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------------&quot;</span>);</span><br><span class="line">        <span class="comment">//1.得到当前时间毫秒值</span></span><br><span class="line">        <span class="type">Date</span> <span class="variable">d1</span> <span class="operator">=</span><span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        System.out.println(d1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.当前时间往后走1小时121s</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">time2</span> <span class="operator">=</span> d1.getTime();</span><br><span class="line">        time2 += (<span class="number">60</span>*<span class="number">60</span> + <span class="number">121</span>)*<span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.把时间毫秒值转换成对应的日期对象</span></span><br><span class="line"><span class="comment">//        Date d2 = new Date(time2);</span></span><br><span class="line"><span class="comment">//        System.out.println(d2);</span></span><br><span class="line"></span><br><span class="line">        <span class="type">Date</span> <span class="variable">d3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        d3.setTime(time2);</span><br><span class="line">        System.out.println(d3);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>时间毫秒值</strong> <strong>-&gt;</strong> <strong>日期对象</strong></p>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Date(long time)</td>
+<td>把时间毫秒值转换成Date日期对象。</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Date方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public void setTime(long time)</td>
+<td>设置日期对象的时间为当前时间毫秒值对应的时间</td>
+</tr>
+</tbody></table>
+<h3 id="2-SimpleDateFormat"><a href="#2-SimpleDateFormat" class="headerlink" title="2.SimpleDateFormat"></a>2.SimpleDateFormat</h3><ul>
+<li>代表简单日期格式化，可以用来把日期时间格式化成为我们想要的形式</li>
+</ul>
+<p><strong>构造器</strong></p>
+<table>
+<thead>
+<tr>
+<th>构造器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public SimpleDateFormat(String pattern)</td>
+<td>创建简单日期格式化对象，并封装格式化的形式信息</td>
+</tr>
+</tbody></table>
+<p><strong>格式化方法</strong></p>
+<table>
+<thead>
+<tr>
+<th>格式化方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public final String <strong>format(Date date)</strong></td>
+<td>将日期格式化成日期&#x2F;时间字符串</td>
+</tr>
+<tr>
+<td>public final String <strong>format(Object time)</strong></td>
+<td>将时间毫秒值式化成日期&#x2F;时间字符串</td>
+</tr>
+</tbody></table>
+<p><strong>SimpleDateFormat</strong>解析字符串时间成为日期对象</p>
+<table>
+<thead>
+<tr>
+<th>解析方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Date <strong>parse(String source)</strong></td>
+<td>从给定字符串的开始解析文本以生成日期</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleDateFormatDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.日期对象</span></span><br><span class="line">        <span class="type">Date</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        System.out.println(d);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.格式化这个日期对象</span></span><br><span class="line">        <span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy年MM月dd日 HH:mm:ss EEE a&quot;</span>);</span><br><span class="line">        <span class="comment">//3.开始格式化日期对象成为喜欢的字符串形式</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">rs</span> <span class="operator">=</span> sdf.format(d);</span><br><span class="line">        System.out.println(rs);</span><br><span class="line">        System.out.println(<span class="string">&quot;--------------------&quot;</span>);</span><br><span class="line">        <span class="comment">//4.格式化时间毫秒值</span></span><br><span class="line">        <span class="comment">//121秒后的时间毫秒值是多少</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> d.getTime()+<span class="number">121</span>*<span class="number">1000</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">rs1</span> <span class="operator">=</span> sdf.format(time);</span><br><span class="line">        System.out.println(rs1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleDateFormatDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException &#123;</span><br><span class="line">        <span class="comment">//目标：学会使用SimpleDateFormat解析字符串时间成为日期对象</span></span><br><span class="line">        <span class="comment">//有一个时间2021年08月06日 11：11：11 往后2天14小时49分04秒的时间是多少</span></span><br><span class="line">        <span class="comment">//1.把字符串时间拿到程序中来</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">dateStr</span> <span class="operator">=</span> <span class="string">&quot;2021年08月06日 11:11:11&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.把字符串时间解析成日期对象：形式必须与被解析时间的形式完全一样，否则运行时解析报错</span></span><br><span class="line">        <span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy年MM月dd日 HH:mm:ss&quot;</span>);</span><br><span class="line">        <span class="type">Date</span> <span class="variable">d</span> <span class="operator">=</span> sdf.parse(dateStr);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.完后走2天14小时49分钟06秒</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> d.getTime() + (<span class="number">2L</span>*<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span> + <span class="number">14</span>*<span class="number">60</span>*<span class="number">60</span> + <span class="number">49</span>*<span class="number">60</span> + <span class="number">6</span>) * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.格式化这个时间毫秒值得到结果</span></span><br><span class="line">        System.out.println(sdf.format(time));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>练习：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleDateFormatTest1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException &#123;</span><br><span class="line">        <span class="comment">//1.开始和结束的时间 小皮和小贾</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">startTime</span> <span class="operator">=</span> <span class="string">&quot;2021-11-11 00:00:00&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">endTime</span> <span class="operator">=</span> <span class="string">&quot;2021-11-11 00:10:00&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">xiaoJia</span> <span class="operator">=</span> <span class="string">&quot;2021-11-11 00:03:47&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">xiaoPi</span> <span class="operator">=</span> <span class="string">&quot;2021-11-11 00:10:11&quot;</span>;</span><br><span class="line">        <span class="comment">//2.解析他们的时间</span></span><br><span class="line">        <span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line">        <span class="type">Date</span> <span class="variable">d1</span> <span class="operator">=</span> sdf.parse(startTime);</span><br><span class="line">        <span class="type">Date</span> <span class="variable">d2</span> <span class="operator">=</span> sdf.parse(endTime);</span><br><span class="line">        <span class="type">Date</span> <span class="variable">d3</span> <span class="operator">=</span> sdf.parse(xiaoJia);</span><br><span class="line">        <span class="type">Date</span> <span class="variable">d4</span> <span class="operator">=</span> sdf.parse(xiaoPi);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (d3.after(d1) &amp;&amp; d3.before(d2))&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;小贾秒杀成功，可以发货了！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;小贾秒杀失败！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (d4.after(d1) &amp;&amp; d4.before(d2)) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;小皮秒杀成功，可以发货了！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;小皮秒杀失败！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Calendar"><a href="#3-Calendar" class="headerlink" title="3.Calendar"></a>3.Calendar</h3><ul>
+<li><p>Calendar代表了系统此刻日期对应的日历对象。</p>
+</li>
+<li><p>Calendar是一个抽象类，不能直接创建对象。</p>
+</li>
+</ul>
+<p><strong>Calendar日历类创建日历对象的方法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  static Calendar getInstance()</td>
+<td>获取当前日历对象</td>
+</tr>
+</tbody></table>
+<p><strong>Calendar</strong>常用方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int get(int field)</td>
+<td>取日期中的某个字段信息。</td>
+</tr>
+<tr>
+<td>public void set(int field,int value)</td>
+<td>修改日历的某个字段信息。</td>
+</tr>
+<tr>
+<td>public void add(int field,int amount)</td>
+<td>为某个字段增加&#x2F;减少指定的值</td>
+</tr>
+<tr>
+<td>public final Date getTime()</td>
+<td>拿到此刻日期对象。</td>
+</tr>
+<tr>
+<td>public long getTimeInMillis()</td>
+<td>拿到此刻时间毫秒值</td>
+</tr>
+</tbody></table>
+<p><strong>注意：</strong>calendar是可变日期对象，一旦修改后其对象本身表示的时间将产生变化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CalenderDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//1.拿到系统此时日历对象</span></span><br><span class="line">        <span class="type">Calendar</span> <span class="variable">cal</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">        System.out.println(cal);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.获取日历的信息：public int get(int field); 取日期中的谋个字段信息</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">year</span> <span class="operator">=</span> cal.get(Calendar.YEAR);</span><br><span class="line">        System.out.println(year);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.public void add(int foeld,int amount); 为某个字段增加/减少指定的值</span></span><br><span class="line">        cal.add(Calendar.DAY_OF_YEAR,<span class="number">64</span>);</span><br><span class="line">        cal.add(Calendar.MINUTE,<span class="number">59</span>);</span><br><span class="line">        System.out.println(cal);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.public final Date getTime(); 拿到此时日期对象</span></span><br><span class="line">        <span class="type">Date</span> <span class="variable">d</span> <span class="operator">=</span> cal.getTime();</span><br><span class="line">        System.out.println(d);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-包装类"><a href="#二-包装类" class="headerlink" title="二.包装类"></a>二.包装类</h2><ul>
+<li>其实就是8种基本数据类型对应的引用类型。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>引用数据类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Java为了实现一切皆对象，为8种基本类型提供了对应的引用类型。</p>
+</li>
+<li><p><strong>后面的集合和泛型其实也只能支持包装类型，不支持基本数据类型</strong>。</p>
+</li>
+</ul>
+<p><strong>自动装箱</strong>：基本类型的数据和变量可以直接赋值给包装类型的变量。</p>
+<p><strong>自动拆箱：</strong>包装类型的变量可以直接赋值给基本数据类型的变量。</p>
+<p><strong>包装类的特有功能</strong></p>
+<p>包装类的变量的默认值可以是null，容错率更高。</p>
+<p>可以把基本类型的数据转换成字符串类型(用处不大)</p>
+<p>①调用toString()方法得到字符串结果。</p>
+<p>②调用Integer.toString(基本类型的数据)。</p>
+<p>可以把字符串类型的数值转换成真实的数据类型（有用）</p>
+<p>①Integer.parseInt(“字符串类型的整数”)</p>
+<p>②Double.parseDouble(“字符串类型的小数”)。</p>
+<h2 id="三-正则表达式"><a href="#三-正则表达式" class="headerlink" title="三.正则表达式"></a>三.正则表达式</h2><h3 id="1-正则表达式概述"><a href="#1-正则表达式概述" class="headerlink" title="1.正则表达式概述"></a>1.正则表达式概述</h3><ul>
+<li>正则表达式可以用一些规定的字符来制定规则，并用来校验数据格式的合法性。</li>
+</ul>
+<p><strong>字符串对象提供了匹配正则表达式的方法</strong></p>
+<p>public boolean matches(<a href="file:///D:/course/%E5%9F%BA%E7%A1%80%E9%98%B6%E6%AE%B5/API%E6%96%87%E6%A1%A3/docs/api/java.base/java/lang/String.html">String</a> regex): 判断是否匹配正则表达式，匹配返回true，不匹配返回false</p>
+<h3 id="2-案例"><a href="#2-案例" class="headerlink" title="2.案例"></a>2.案例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RegexDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//校验 手机号码 邮箱 电话号码</span></span><br><span class="line">        <span class="comment">//checkPhone();</span></span><br><span class="line">        <span class="comment">//checkEmail();</span></span><br><span class="line">        checkTell();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">checkTell</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入您的电话号码：&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">phone</span> <span class="operator">=</span> sc.next();</span><br><span class="line">            <span class="comment">//判断电话号码的格式是否正确</span></span><br><span class="line">            <span class="keyword">if</span> (phone.matches(<span class="string">&quot;0\\d&#123;2,6&#125;-?\\d&#123;5,20&#125;&quot;</span>))&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;电话号码格式正确，注册完成！&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;格式错误，请重新输入~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">checkEmail</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入您的注册邮箱：&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">phone</span> <span class="operator">=</span> sc.next();</span><br><span class="line">            <span class="comment">//判断邮箱的格式是否正确</span></span><br><span class="line">            <span class="keyword">if</span> (phone.matches(<span class="string">&quot;\\w&#123;1,30&#125;@[a-zA-Z0-9]&#123;2,20&#125;(\\.[a-zA-Z0-9]&#123;2,20&#125;)&#123;1,2&#125;&quot;</span>))&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;邮箱格式正确，注册完成！&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;格式错误，请重新输入~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">checkPhone</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入您的手机号码：&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">phone</span> <span class="operator">=</span> sc.next();</span><br><span class="line">            <span class="comment">//判断手机号码的格式是否正确</span></span><br><span class="line">            <span class="keyword">if</span> (phone.matches(<span class="string">&quot;1[3-9]\\d&#123;9&#125;&quot;</span>))&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;手机号码格式正确，注册完成！&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;格式错误，请重新输入~~~&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-正则表达式在字符串方法中的使用"><a href="#3-正则表达式在字符串方法中的使用" class="headerlink" title="3.正则表达式在字符串方法中的使用"></a>3.<strong>正则表达式在字符串方法中的使用</strong></h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String replaceAll(String regex,String newStr)</td>
+<td>按照正则表达式匹配的内容进行替换</td>
+</tr>
+<tr>
+<td>public String[] split(String regex)：</td>
+<td>按照正则表达式匹配的内容进行分割字符串，反回一个字符串数组。</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 正则表达式在方法中的应用。</span></span><br><span class="line"><span class="comment">    public String[] split(String regex)</span></span><br><span class="line"><span class="comment">       --按照正则表达式匹配的内容进行分割字符串，返回一个字符串数组</span></span><br><span class="line"><span class="comment">    public String replaceAll(String regex,String newStr)</span></span><br><span class="line"><span class="comment">       --按照正则表达式匹配的内容进行替换</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RegexDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">names</span> <span class="operator">=</span> <span class="string">&quot;刘备adjoajd张飞ajdiajd关羽aafjaijnoa&quot;</span>;</span><br><span class="line">        String[] arrs = names.split(<span class="string">&quot;\\w+&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; arrs.length; i++) &#123;</span><br><span class="line">            System.out.println(arrs[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">names2</span> <span class="operator">=</span> names.replaceAll(<span class="string">&quot;\\w+&quot;</span>,<span class="string">&quot;  &quot;</span>);</span><br><span class="line">        System.out.println(names2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-正则表达式爬取信息"><a href="#4-正则表达式爬取信息" class="headerlink" title="4.正则表达式爬取信息"></a>4.正则表达式爬取信息</h3><h2 id="四-Array类"><a href="#四-Array类" class="headerlink" title="四.Array类"></a>四.Array类</h2><h3 id="1-Arrays类概述，常用功能演示"><a href="#1-Arrays类概述，常用功能演示" class="headerlink" title="1.Arrays类概述，常用功能演示"></a>1.Arrays类概述，常用功能演示</h3><ul>
+<li>数组操作工具类，专门用于操作数组元素的。</li>
+</ul>
+<p><strong>Arrays类的常用API</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public static <a href="mk:@MSITStore:C:\course\API文档\jdk-9_google.CHM::/java/lang/String.html">String</a> toString(类型[] a)</td>
+<td>返回数组的内容（字符串形式）</td>
+</tr>
+<tr>
+<td>public  static void sort(类型[] a)</td>
+<td>对数组进行默认升序排序</td>
+</tr>
+<tr>
+<td>public  static <T> void sort(类型[] a, <a href="mk:@MSITStore:C:\course\API文档\jdk-9_google.CHM::/java/util/Comparator.html">Comparator</a>&lt;?  super T&gt; c)</td>
+<td>使用比较器对象自定义排序</td>
+</tr>
+<tr>
+<td>public  static int binarySearch(int[] a,  int key)</td>
+<td>二分搜索数组中的数据，存在返回索引，不存在返回-1</td>
+</tr>
+</tbody></table>
+<h3 id="2-Arrays类对于Comparator比较器的支持"><a href="#2-Arrays类对于Comparator比较器的支持" class="headerlink" title="2.Arrays类对于Comparator比较器的支持"></a>2.Arrays类对于Comparator比较器的支持</h3><p><strong>Arrays</strong>类的排序方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public  static void sort(类型[] a)</td>
+<td>对数组进行默认升序排序</td>
+</tr>
+<tr>
+<td>public  static <T> void sort(类型[] a, <a href="mk:@MSITStore:C:\course\API文档\jdk-9_google.CHM::/java/util/Comparator.html">Comparator</a>&lt;?  super T&gt; c)</td>
+<td>使用比较器对象自定义排序</td>
+</tr>
+</tbody></table>
+<p><strong>自定义排序规则</strong></p>
+<ul>
+<li>设置<strong>Comparator接口对应的比较器对象，来定制比较规则。</strong></li>
+</ul>
+<p>如果认为左边数据 大于 右边数据 返回正整数</p>
+<p>如果认为左边数据 小于 右边数据 返回负整数</p>
+<p>如果认为左边数据 等于 右边数据 返回0</p>
+<h2 id="五-常见算法"><a href="#五-常见算法" class="headerlink" title="五.常见算法"></a>五.常见算法</h2><h3 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1.冒泡排序"></a>1.冒泡排序</h3><p><strong>冒泡排序的思想</strong></p>
+<ul>
+<li>每次从数组中找出最大值放在数组的后面去。</li>
+</ul>
+<p><strong>实现冒泡排序的</strong>关键步骤分析</p>
+<ul>
+<li><p>确定总共需要做几轮： 数组的长度-1.</p>
+</li>
+<li><p>每轮比较几次:</p>
+</li>
+<li><p>当前位置大于后一个位置则交换数据</p>
+</li>
+</ul>
+<h3 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2.选择排序"></a>2.选择排序</h3><p><strong>选择排序的思想</strong></p>
+<ul>
+<li>每轮选择当前位置，开始找出后面的较小值与该位置交换</li>
+</ul>
+<p><strong>选择排序的关键</strong></p>
+<ul>
+<li><p>确定总共需要选择几轮： 数组的长度-1.</p>
+</li>
+<li><p>控制每轮从以前位置为基准，与后面元素选择几次。</p>
+</li>
+<li></li>
+<li><p>&#96;&#96;&#96;java<br>&#x2F;**<br> 使用选择排序的方法对数组进行排序<br> *&#x2F;<br>public class Test1 {<br>public static void main(String[] args) {<br>    &#x2F;&#x2F;1.定义数组<br>    int[] arr &#x3D; {5, 3, 6, 8};<br>    &#x2F;&#x2F;           0  1  2  3<br><br>    &#x2F;&#x2F;2.定义一个循环控制选择几轮： arr.length - 1<br>    for (int i &#x3D; 0; i &lt; arr.length - 1; i++) {<br>        &#x2F;&#x2F;3.定义内部循环：控制选择几次<br>        for (int j &#x3D; i + 1; j &lt; arr.length; j++) {<br>            &#x2F;&#x2F;当前位置： arr[i]<br>            &#x2F;&#x2F;如果有比当前位置数据更小，则交换<br>            if (arr[i] &gt; arr[j]){<br>                int temp &#x3D; arr[i];<br>                arr[i] &#x3D; arr[j];<br>                arr[j] &#x3D; temp;<br>            }<br>        }<br>    }<br>    System.out.println(Arrays.toString(arr));<br>}<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.二分查找</span><br><span class="line"></span><br><span class="line">- 二分查询性能好，二分查找的前提是必须是排好序的数据。</span><br><span class="line"></span><br><span class="line">- **二分查找相当于每次去掉一半的查找范围**</span><br><span class="line"></span><br><span class="line">**结论：二分查找正常的检索条件应该是开始位置****min &lt;=** **结束位置****max** </span><br><span class="line"></span><br><span class="line">- 数组的二分查找的实现步骤是什么样的?</span><br><span class="line"></span><br><span class="line">**定义变量记录左边和右边位置。**</span><br><span class="line"></span><br><span class="line">**使用**while循环控制查询（条件是左边位置&lt;=右边位置）</span><br><span class="line"></span><br><span class="line">**循环内部获取中间元素索引**</span><br><span class="line"></span><br><span class="line">**判断当前要找的元素如果大于中间元素，左边位置**=中间索+1</span><br><span class="line"></span><br><span class="line">**判断当前要找的元素如果小于中间元素，右边位置**=中间索- 1</span><br><span class="line"></span><br><span class="line">**判断当前要找的元素如果等于中间元素，返回当前中间元素索引。**</span><br><span class="line"></span><br><span class="line">## 六.Lambda表达式</span><br><span class="line"></span><br><span class="line">### 1.Lambda概述</span><br><span class="line"></span><br><span class="line">Lambda表达式是JDK 8开始后的一种新语法形式。</span><br><span class="line"></span><br><span class="line">**作用：简化匿名内部类的代码写法。**</span><br><span class="line"></span><br><span class="line">**Lambda**表达式的简化格式</span><br><span class="line"></span><br><span class="line">(匿名内部类被重写方法的形参列表) -&gt; &#123;</span><br><span class="line">  被重写方法的方法体代码。</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">注：-&gt; 是语法形式，无实际含义</span><br><span class="line"></span><br><span class="line">**注意：Lambda**表达式只能简化函数式接口的匿名内部类的写法形式</span><br><span class="line"></span><br><span class="line">函数式接口：首先必须是接口、其次接口中有且仅有一个抽象方法的形式</span><br><span class="line"></span><br><span class="line">### 2.Lambda表达式的省略规则</span><br><span class="line"></span><br><span class="line">- **Lambda表达式的省略写法（进一步在Lambda表达式的基础上继续简化）**</span><br><span class="line"></span><br><span class="line">- 参数类型可以省略不写。</span><br><span class="line"></span><br><span class="line">- 如果只有一个参数，参数类型可以省略，同时()也可以省略。</span><br><span class="line"></span><br><span class="line">- 如果Lambda表达式的方法体代码只有一行代码。可以省略大括号不写,同时要省略分号！</span><br><span class="line"></span><br><span class="line">- 如果Lambda表达式的方法体代码只有一行代码。可以省略大括号不写。此时，如果这行代码是return语句，必须省略return不写，同时也必须省略&quot;;&quot;不写</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public class LambdaDemo1 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        //使用Lambda的标准格式简化匿名内部类的代码形式</span><br><span class="line">        //Lambda只能简化接口中只有一个抽象方法的匿名内部类形式</span><br><span class="line">//        Swimming s1 = new Swimming() &#123;</span><br><span class="line">//            @Override</span><br><span class="line">//            public void swim() &#123;</span><br><span class="line">//                System.out.println(&quot;老师游泳贼快~~~&quot;);</span><br><span class="line">//            &#125;</span><br><span class="line">//        &#125;;</span><br><span class="line">//        go(s1);</span><br><span class="line"></span><br><span class="line">//        Swimming s1 = () -&gt;System.out.println(&quot;老师游泳贼快~~~&quot;);go(s1);</span><br><span class="line"></span><br><span class="line">        go(() -&gt;System.out.println(&quot;老师游泳贼快~~~&quot;));</span><br><span class="line">        //最终简化形式</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void go(Swimming s) &#123;</span><br><span class="line">        System.out.println(&quot;开始~~~&quot;);</span><br><span class="line">        s.swim();</span><br><span class="line">        System.out.println(&quot;结束！！！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@FunctionalInterface</span><br><span class="line">interface Swimming&#123;</span><br><span class="line">    void swim();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LambdaDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Integer[] ages = &#123;<span class="number">34</span>, <span class="number">12</span>, <span class="number">42</span>, <span class="number">23</span>&#125;;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         参数一：被排序的数组，必须是引用类型的元素</span></span><br><span class="line"><span class="comment">         参数二：匿名内部类对象，代表了一个比较器对象</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line"><span class="comment">//        Arrays.sort(ages, new Comparator&lt;Integer&gt;() &#123;</span></span><br><span class="line"><span class="comment">//            @Override</span></span><br><span class="line"><span class="comment">//            public int compare(Integer o1, Integer o2) &#123;</span></span><br><span class="line"><span class="comment">//                return o1 - o2;//升序</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        Arrays.sort(ages, ( o1,  o2) -&gt; &#123;</span></span><br><span class="line"><span class="comment">//                return o1 - o2;//升序</span></span><br><span class="line"><span class="comment">//        &#125;);</span></span><br><span class="line"></span><br><span class="line">        Arrays.sort(ages, ( o1,  o2) -&gt; o1 - o2);</span><br><span class="line">        <span class="comment">//最终简化形式</span></span><br><span class="line"></span><br><span class="line">        System.out.println(Arrays.toString(ages));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B62_4%E5%8C%85%E8%A3%85%E7%B1%BB%EF%BC%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B62_4%E5%8C%85%E8%A3%85%E7%B1%BB%EF%BC%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B63,%E9%9B%86%E5%90%88%EF%BC%8CColllection,%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Java集合，Collection，常见数据结构，list集合，泛型</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B62_3%E5%86%85%E9%83%A8%E7%B1%BB,%E5%B8%B8%E7%94%A8API/">Java 内部类，常用api</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>继承 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">继承</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2022&nbsp;&nbsp;17:45:20</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h1><h2 id="一-继承概述、使用继承的好处"><a href="#一-继承概述、使用继承的好处" class="headerlink" title="一.继承概述、使用继承的好处"></a>一.继承概述、使用继承的好处</h2><h4 id="1-什么是继承"><a href="#1-什么是继承" class="headerlink" title="1.什么是继承?"></a>1.什么是继承?</h4><ul>
+<li><p>Java中提供一个关键字extends，用这个关键字，我们可以让一个类和另一个类建立起父子关系。</p>
+</li>
+<li><p>public class Student <strong>extends</strong> People {}</p>
+</li>
+<li><p>Student称为子类（派生类），People称为父类(基类 或超类)。</p>
+</li>
+<li><p><strong>作用</strong>：当子类继承父类后，就可以直接使用父类公共的属性和方法了</p>
+</li>
+<li><p><strong>好处</strong>:可以提高代码的复用性,减少代码冗余，增强类的功能扩展性。</p>
+</li>
+</ul>
+<h4 id="2-继承的设计规范"><a href="#2-继承的设计规范" class="headerlink" title="2.继承的设计规范"></a>2.继承的设计规范</h4><ul>
+<li><p>子类们相同特征（共性属性，共性方法）放在父类中定义，子类独有的的属性和行为应该定义在子类自己里面。</p>
+</li>
+<li><p>如果子类的独有属性、行为定义在父类中，会导致其它子类也会得到这些属性和行为，这不符合面向对象逻辑。</p>
+</li>
+</ul>
+<h2 id="二-继承的特点"><a href="#二-继承的特点" class="headerlink" title="二.继承的特点"></a>二.继承的特点</h2><p><em>①子类可以继承父类的属性和行为，但是子类不能继承父类的构造器。</em></p>
+<p><em>②Java是单继承模式：一个类只能继承一个直接父类。</em></p>
+<p><em>③Java不支持多继承、但是支持多层继承。</em></p>
+<p><em>④Java中所有的类都是Object类的子类。</em></p>
+<h4 id="1-子类是否可以继承父类的构造器？"><a href="#1-子类是否可以继承父类的构造器？" class="headerlink" title="1.子类是否可以继承父类的构造器？"></a><strong>1.子类是否可以继承父类的构造器？</strong></h4><ul>
+<li>不可以的，子类有自己的构造器，父类构造器用于初始化父类对象。</li>
+</ul>
+<h4 id="2-子类是否可以继承父类的私有成员？"><a href="#2-子类是否可以继承父类的私有成员？" class="headerlink" title="2.子类是否可以继承父类的私有成员？"></a><strong>2.子类是否可以继承父类的私有成员？</strong></h4><ul>
+<li>可以的，只是不能直接访问。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//理解继承的特点</span></span><br><span class="line">        <span class="comment">//1.子类不能继承父类的构造器</span></span><br><span class="line">        <span class="comment">//2.子类是否可以继承父类的私有？可以继承父类的私有成员，但是不能直接访问</span></span><br><span class="line">        <span class="type">Tiger</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Tiger</span>();</span><br><span class="line">        <span class="comment">//t.eat;//报错</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animals</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;动物都要吃~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Tiger</span> <span class="keyword">extends</span> <span class="title class_">Animals</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-子类是否可以继承父类的静态成员？"><a href="#3-子类是否可以继承父类的静态成员？" class="headerlink" title="3.子类是否可以继承父类的静态成员？"></a><strong>3.子类是否可以继承父类的静态成员？</strong></h4><ul>
+<li><p>子类可以直接使用父类的静态成员（共享）</p>
+</li>
+<li><p>但个人认为：子类不能继承父类的静态成员。（共享并非继承）</p>
+</li>
+</ul>
+<p><strong>Java只支持单继承，不支持多继承。</strong> </p>
+<p><strong>Java支持多层继承</strong>,子类 A 继承父类 B ，父类B 可以 继承父类 C</p>
+<p><strong>Object特点：</strong></p>
+<ul>
+<li>Java中所有类，要么直接继承了Object , 要么默认继承了Object , 要么间接继承了Object, Object是祖宗类。</li>
+</ul>
+<h2 id="三-继承后：成员变量、成员方法的访问特点"><a href="#三-继承后：成员变量、成员方法的访问特点" class="headerlink" title="三.继承后：成员变量、成员方法的访问特点"></a>三.继承后：成员变量、成员方法的访问特点</h2><h4 id="1-在子类方法中访问成员（成员变量、成员方法）满足：就近原则"><a href="#1-在子类方法中访问成员（成员变量、成员方法）满足：就近原则" class="headerlink" title="1.在子类方法中访问成员（成员变量、成员方法）满足：就近原则"></a><strong>1.在子类方法中访问</strong>成员（成员变量、成员方法）满足：<strong>就近原则</strong></h4><ul>
+<li><p>先子类局部范围找</p>
+</li>
+<li><p>然后子类成员范围找</p>
+</li>
+<li><p>然后父类成员范围找，如果父类范围还没有找到则报错。</p>
+</li>
+</ul>
+<h4 id="2-如果子父类中，出现了重名的成员，会优先使用子类的，此时如果一定要在子类中使用父类的怎么办？"><a href="#2-如果子父类中，出现了重名的成员，会优先使用子类的，此时如果一定要在子类中使用父类的怎么办？" class="headerlink" title="2.如果子父类中，出现了重名的成员，会优先使用子类的，此时如果一定要在子类中使用父类的怎么办？"></a><strong>2.如果子父类中，出现了重名的成员，会优先使用子类的，</strong>此时如果一定要在子类中使用父类的怎么办？</h4><p>可以通过<strong>super关键字</strong>，指定访问父类的成员。</p>
+<p>格式：super.父类成员变量&#x2F;父类成员方法</p>
+<h2 id="四-继承后：方法重写"><a href="#四-继承后：方法重写" class="headerlink" title="四.继承后：方法重写"></a>四.继承后：方法重写</h2><h4 id="1-什么是方法重写？"><a href="#1-什么是方法重写？" class="headerlink" title="1.什么是方法重写？"></a><strong>1.什么是方法重写？</strong></h4><p>在继承体系中，子类出现了和父类中一模一样的方法声明，我们就称子类这个方法是重写的方法。</p>
+<h4 id="2-方法重写的应用场景"><a href="#2-方法重写的应用场景" class="headerlink" title="2.方法重写的应用场景"></a><strong>2.方法重写的应用场景</strong></h4><p>当子类需要父类的功能，但父类的该功能不完全满足自己的需求时。</p>
+<p>子类可以重写父类中的方法。</p>
+<h4 id="3-案例演示："><a href="#3-案例演示：" class="headerlink" title="3.案例演示："></a><strong>3.案例演示：</strong></h4><p>旧手机的功能只能是基本的打电话，发信息</p>
+<p>新手机的功能需要能够：基本的打电话下支持视频通话。基本的发信息下支持发送语音和图片。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//方法的重写</span></span><br><span class="line">        <span class="type">NewPhone</span> <span class="variable">apple</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NewPhone</span>();</span><br><span class="line">        apple.call();</span><br><span class="line">        apple.sendMsg();</span><br><span class="line">        System.out.println(<span class="string">&quot;============&quot;</span>);</span><br><span class="line">        <span class="type">Phone</span> <span class="variable">hawei</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Phone</span>();</span><br><span class="line">        hawei.call();</span><br><span class="line">        hawei.sendMsg();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 新手机，子类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NewPhone</span> <span class="keyword">extends</span> <span class="title class_">Phone</span>&#123;</span><br><span class="line">    <span class="comment">//重写方法</span></span><br><span class="line">    <span class="meta">@Override</span><span class="comment">// 重写校验注解，这个方法必须是正确的重写。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">call</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>.call();</span><br><span class="line">        System.out.println(<span class="string">&quot;开始视频通话~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//重写方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendMsg</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>.sendMsg();</span><br><span class="line">        System.out.println(<span class="string">&quot;发送好看的图片~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 旧手机，父类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Phone</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">call</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;打电话~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendMsg</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;发短信~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-Override-重写注解"><a href="#4-Override-重写注解" class="headerlink" title="4.@Override****重写注解"></a><strong>4.@Override****重写注解</strong></h4><p>@Override是放在重写后的方法上，作为重写是否正确的校验注解。</p>
+<p>加上该注解后如果重写错误，编译阶段会出现错误提示。</p>
+<ul>
+<li><strong>重写方法都加@Override注解</strong></li>
+</ul>
+<h4 id="5-方法重写注意事项和要求："><a href="#5-方法重写注意事项和要求：" class="headerlink" title="5.方法重写注意事项和要求："></a><strong>5.方法重写注意事项和要求：</strong></h4><ul>
+<li><strong>重写方法的名称、形参列表必须与被重写方法的名称和参数列表一致。</strong></li>
+</ul>
+<p>私有方法不能被重写。</p>
+<p>子类重写父类方法时，访问权限必须大于或者等于父类 （暂时了解 ：缺省 &lt; protected &lt; public）</p>
+<p>子类不能重写父类的静态方法，如果重写会报错的。</p>
+<h2 id="五-继承后：子类构造器的特点"><a href="#五-继承后：子类构造器的特点" class="headerlink" title="五.继承后：子类构造器的特点"></a>五.继承后：子类构造器的特点</h2><h4 id="1-子类继承父类后构造器的特点："><a href="#1-子类继承父类后构造器的特点：" class="headerlink" title="1.子类继承父类后构造器的特点："></a><strong>1.子类继承父类后构造器的特点：</strong></h4><p><em>子类中所有的构造器默认都会先访问父类中无参的构造器，再执行自己。</em></p>
+<h4 id="2-为什么？"><a href="#2-为什么？" class="headerlink" title="2.为什么？"></a><strong>2.为什么？</strong></h4><p>子类在初始化的时候，有可能会使用到父类中的数据，如果父类没有完成初始化，子类将无法使用父类的数据。</p>
+<p><strong>子类初始化之前，一定要调用父类构造器先完成父类数据空间的初始化。</strong></p>
+<h4 id="3-怎么调用父类构造器的？"><a href="#3-怎么调用父类构造器的？" class="headerlink" title="3.怎么调用父类构造器的？"></a><strong>3.怎么调用父类构造器的？</strong></h4><p>子类构造器的第一行语句默认都是：**super()**，不写也存在。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">People</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">People</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">People</span><span class="params">(String name, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">extends</span> <span class="title class_">People</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name,<span class="type">int</span> age)</span>&#123;</span><br><span class="line">        <span class="comment">//调用父类的有参数构造器，初始化继承父类的数据</span></span><br><span class="line">        <span class="built_in">super</span>(name,age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="comment">//子类构造器如何去访问父类有参数构造器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="number">28</span>);</span><br><span class="line">        System.out.println(s.getName());</span><br><span class="line">        System.out.println(s.getAge());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>super</strong>调用父类有参数构造器的作用：</p>
+<ul>
+<li>初始化继承自父类的数据。</li>
+</ul>
+<p><strong>如果父类中没有无参数构造器，只有有参构造器，会出现什么现象呢？</strong></p>
+<ul>
+<li>会报错。因为子类默认是调用父类无参构造器的。</li>
+</ul>
+<p><strong>如何解决？</strong></p>
+<ul>
+<li>子类构造器中可以通过书写 super(…)，手动调用父类的有参数构造器</li>
+</ul>
+<h2 id="六-this、super使用总结"><a href="#六-this、super使用总结" class="headerlink" title="六.this、super使用总结"></a>六.this、super使用总结</h2><p><strong>this和super详情</strong></p>
+<p><strong>this</strong>：代表本类对象的引用；<strong>super</strong>：代表父类存储空间的标识。</p>
+<table>
+<thead>
+<tr>
+<th><strong>关键字</strong></th>
+<th><strong>访问成员变量</strong></th>
+<th><strong>访问成员方法</strong></th>
+<th><strong>访问构造方法</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>this</strong></td>
+<td>this.成员变量  访问本类成员变量</td>
+<td>this.成员方法(…)  访问本类成员方法</td>
+<td><strong>this(…)</strong>  <strong>访问本类构器</strong></td>
+</tr>
+<tr>
+<td><strong>super</strong></td>
+<td>super.成员变量  访问父类成员变量</td>
+<td>super.成员方法(…)  访问父类成员方法</td>
+<td>super(…)  访问父类构造器</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String schoolName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//如果学生不填写学校，默认这个对象的学校是三国</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name)</span>&#123;</span><br><span class="line">        <span class="comment">//借用本类兄弟构造器</span></span><br><span class="line">        <span class="built_in">this</span>(name,<span class="string">&quot;三国程序员&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name, String schoolName)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.schoolName = schoolName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSchoolName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> schoolName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSchoolName</span><span class="params">(String schoolName)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.schoolName = schoolName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张飞&quot;</span>,<span class="string">&quot;蜀国&quot;</span>);</span><br><span class="line">        System.out.println(s1.getName());</span><br><span class="line">        System.out.println(s1.getSchoolName());</span><br><span class="line"></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;关羽&quot;</span>);</span><br><span class="line">        System.out.println(s2.getName());</span><br><span class="line">        System.out.println(s2.getSchoolName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**this(…)<strong>和</strong>super(…)**使用注意点：</p>
+<p>子类通过 this (…）去调用本类的其他构造器，本类其他构造器会通过 super 去手动调用父类的构造器，最终还是会调用父类构造器的。</p>
+<p>注意：this(…) super(…) 都只能放在构造器的第一行，所以二者不能共存在同一个构造器中。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B61_2.%E7%BB%A7%E6%89%BF/">http://example.com/2022/08/03/Java%E8%BF%9B%E9%98%B61_2.%E7%BB%A7%E6%89%BF/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/03/Java%E8%BF%9B%E9%98%B62_1.%E8%AF%AD%E6%B3%95/">语法</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/03/Java%E8%BF%9B%E9%98%B61_1.static%E8%BF%9B%E9%98%B6/">Java进阶1_1.static进阶</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
