@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zhang Deshuai">
+
+
+
+
+
+<title>JavaScript02-流程控制 | 张德帅の博客</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">张德帅の博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">张德帅の博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JavaScript02-流程控制</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Zhang Deshuai</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 6, 2022&nbsp;&nbsp;18:26:29</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="JavaScript基础-Day2-流程控制"><a href="#JavaScript基础-Day2-流程控制" class="headerlink" title="JavaScript基础-Day2-流程控制"></a>JavaScript基础-Day2-流程控制</h1><h2 id="一-运算符（操作符）"><a href="#一-运算符（操作符）" class="headerlink" title="一.运算符（操作符）"></a>一.运算符（操作符）</h2><p> <strong>运算符的分类：</strong></p>
+<p><strong>运算符</strong>（operator）也被称为操作符，是用于实现赋值、比较和执行算数运算等功能的符号。</p>
+<p>JavaScript中常用的运算符有：</p>
+<ul>
+<li>算数运算符</li>
+<li>递增和递减运算符</li>
+<li>比较运算符</li>
+<li>逻辑运算符</li>
+<li>赋值运算符</li>
+</ul>
+<h3 id="1-1算数运算符"><a href="#1-1算数运算符" class="headerlink" title="1.1算数运算符"></a>1.1算数运算符</h3><ul>
+<li><p>算术运算符概述</p>
+<p>概念：算术运算使用的符号，用于执行两个变量或值的算术运算。</p>
+<p>+：求和      -：求差     *：求积      &#x2F;：求商     %：取模（取余数）</p>
+</li>
+</ul>
+<p><strong>优先级</strong>： 先乘除后加减，有括号先算括号里面的~~~</p>
+<h3 id="1-2赋值运算符"><a href="#1-2赋值运算符" class="headerlink" title="1.2赋值运算符"></a>1.2赋值运算符</h3><p>赋值运算符：对变量进行赋值的运算符</p>
+<p>已经学过的赋值运算符：&#x3D; 将等号右边的值赋予给左边, 要求左边必须是一个容器</p>
+<p>其他赋值运算符：  </p>
+<p>+&#x3D;      -&#x3D;      *&#x3D;      &#x2F;&#x3D;      %&#x3D;</p>
+<p> 使用这些运算符可以在对变量赋值时进行快速操作</p>
+<h3 id="1-3一元运算符"><a href="#1-3一元运算符" class="headerlink" title="1.3一元运算符"></a>1.3一元运算符</h3><p>自增运算符的用法：</p>
+<p>前置自增：++i</p>
+<p>每执行1次，当前变量数值加1，其作用相当于 num +&#x3D; 1</p>
+<ul>
+<li><strong>前置自增：先自加再使用（记忆口诀：++在前 先加）</strong></li>
+</ul>
+<p>后置自增：i++</p>
+<p>每执行1次，当前变量数值加1，其作用相当于 num +&#x3D; 1</p>
+<ul>
+<li><strong>后置自增：先使用再自加（记忆口诀：++在后 后加）</strong></li>
+</ul>
+<h3 id="1-4比较运算符"><a href="#1-4比较运算符" class="headerlink" title="1.4比较运算符"></a>1.4比较运算符</h3><p>比较运算符的介绍 </p>
+<p> 作用：比较两个数据大小、是否相等</p>
+<p>比较运算符:</p>
+<p>&lt;： 左边是否大于右边   </p>
+<p>&lt;： 左边是否小于右边 </p>
+<p>&gt;&#x3D;： 左边是否大于或等于右边 </p>
+<p>&lt;&#x3D;： 左边是否小于或等于右边 </p>
+<p>&#x3D;&#x3D;： 左右两边是否相等 </p>
+<p>&#x3D;&#x3D;&#x3D;： 左右两边是否类型和值都相等 </p>
+<p>!&#x3D;&#x3D;： 左右两边是否不全等 </p>
+<p>比较结果为boolean类型，即只会得到true或false</p>
+<p><strong>细节：</strong></p>
+<p>字符串比较，是比较的字符对应的ASCII码 </p>
+<ul>
+<li>从左往右依次比较 </li>
+<li>如果第一位一样再比较第二位，以此类推 </li>
+<li>比较的少，了解即可</li>
+</ul>
+<p>NaN不等于任何值，包括它本身 </p>
+<ul>
+<li><p>尽量不要比较小数，因为小数有精度问题 </p>
+</li>
+<li><p>不同类型之间比较会发生隐式转换</p>
+</li>
+</ul>
+<p>最终把数据隐式转换转成number类型再比较 </p>
+<p>所以开发中，如果进行准确的比较我们更喜欢 &#x3D;&#x3D;&#x3D; 或者 !&#x3D;&#x3D;</p>
+<h3 id="1-5逻辑运算符"><a href="#1-5逻辑运算符" class="headerlink" title="1.5逻辑运算符"></a>1.5逻辑运算符</h3><table>
+<thead>
+<tr>
+<th align="center">符号</th>
+<th align="center">名称</th>
+<th align="center">读法</th>
+<th align="center">特点</th>
+<th align="center">口诀</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&amp;&amp;</td>
+<td align="center">逻辑与</td>
+<td align="center">并且</td>
+<td align="center">符号两边都为true 结果才为true</td>
+<td align="center">一假则假</td>
+</tr>
+<tr>
+<td align="center">||</td>
+<td align="center">逻辑或</td>
+<td align="center">或者</td>
+<td align="center">符号两边有一个 true就为true</td>
+<td align="center">一真则真</td>
+</tr>
+<tr>
+<td align="center">！</td>
+<td align="center">逻辑非</td>
+<td align="center">取反</td>
+<td align="center">true变false false变true</td>
+<td align="center">真变假，假变真</td>
+</tr>
+</tbody></table>
+<p> <strong>短路：只存在于 &amp;&amp; 和 || 中，当满足一定条件会让右边代码不执行</strong></p>
+<p>&amp;&amp; 左边为false就短路 || 左边为true就短路</p>
+<p>原因：通过左边能得到整个式子的结果，因此没必要再判断右边</p>
+<p> 运算结果：无论 &amp;&amp; 还是 || ，运算结果都是最后被执行的表达式值，一般用在变量赋值</p>
+<h3 id="1-6-运算符优先级"><a href="#1-6-运算符优先级" class="headerlink" title="1.6 运算符优先级"></a>1.6 运算符优先级</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>运算符</th>
+<th>顺序</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>小括号</td>
+<td>（）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>一元运算符</td>
+<td>++   –  ！</td>
+</tr>
+<tr>
+<td>3</td>
+<td>算数运算符</td>
+<td>先*  &#x2F;  %  后  +  -</td>
+</tr>
+<tr>
+<td>4</td>
+<td>关系运算符</td>
+<td>&gt;  &gt;&#x3D;  &lt;  &lt;&#x3D;</td>
+</tr>
+<tr>
+<td>5</td>
+<td>相等运算符</td>
+<td>&#x3D;&#x3D;  !&#x3D;  &#x3D;&#x3D;&#x3D;  !&#x3D;&#x3D;</td>
+</tr>
+<tr>
+<td>6</td>
+<td>逻辑运算符</td>
+<td>先 &amp;&amp;  后 ||</td>
+</tr>
+<tr>
+<td>7</td>
+<td>赋值运算符</td>
+<td>&#x3D;</td>
+</tr>
+<tr>
+<td>8</td>
+<td>逗号运算符</td>
+<td>,</td>
+</tr>
+</tbody></table>
+<ul>
+<li>一元运算符里面的逻辑非优先级很高</li>
+<li>逻辑与比逻辑或优先级高</li>
+</ul>
+<h2 id="二-语句"><a href="#二-语句" class="headerlink" title="二.语句"></a>二.语句</h2><h3 id="2-1表达式和语句"><a href="#2-1表达式和语句" class="headerlink" title="2.1表达式和语句"></a>2.1表达式和语句</h3><p>表达式：</p>
+<p>表达式是一组代码的集合，JavaScript解释器会将其计算出一个结果</p>
+<p>语句：js 整句或命令，js 语句是以分号结束（可以省略） 比如： if语句 for 循环语句</p>
+<p>区别：</p>
+<p>表达式计算出一个值，但语句用来自行以使某件事发生(做什么事) </p>
+<p> 表达式： 3 + 4  </p>
+<p>语句 ：alert() </p>
+<p>弹出对话框 其实某些情况，也可以把表达式理解为语句，因为它是在计算结果，也是做事</p>
+<h3 id="2-2-分支语句"><a href="#2-2-分支语句" class="headerlink" title="2.2 分支语句"></a>2.2 分支语句</h3><p>程序三大流程控制语句：<strong>顺序结构    分支结构    循环结构</strong></p>
+<p><strong>分支语句：</strong></p>
+<p>分支语句可以让我们有选择性的执行想要的代码 </p>
+<p> 分支语句包含：  <em><strong>If分支语句  三元运算符  switch 语句</strong></em></p>
+<h4 id="1-if语句"><a href="#1-if语句" class="headerlink" title="1. if语句"></a>1. if语句</h4><p>if语句有三种使用：单分支、双分支、多分支 </p>
+<p>单分支使用语法：if (条件)  {}</p>
+<p>双分支使用语法：if (条件)  {}  else  {}</p>
+<p>多分支使用语法：if (条件)  {}  if  else  {}  if  else  {}  else{}</p>
+<h4 id="2-三元运算符"><a href="#2-三元运算符" class="headerlink" title="2. 三元运算符"></a>2. 三元运算符</h4><p>其实是比 if 双分支 更简单的写法，有时候也叫做三元表达式 </p>
+<p>符号：? 与 : 配合使用 </p>
+<p>语法：  <strong>条件  ？  满足条件执行的代码  ：  不满足条件执行的代码</strong></p>
+<ul>
+<li>一般用来取值</li>
+</ul>
+<h4 id="3-switch语句"><a href="#3-switch语句" class="headerlink" title="3. switch语句"></a>3. switch语句</h4><p>找到跟小括号里数据<strong>全等</strong>的case值，并执行里面对应的代码 </p>
+<p>若没有全等 &#x3D;&#x3D;&#x3D; 的则执行default里的代码</p>
+<p>语法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>  （数据）&#123;</span><br><span class="line">        <span class="keyword">case</span> 值<span class="number">1</span> ：</span><br><span class="line">             代码<span class="number">1</span></span><br><span class="line">             <span class="keyword">break</span>；</span><br><span class="line">        <span class="keyword">case</span> 值<span class="number">2</span> ：</span><br><span class="line">             代码<span class="number">2</span></span><br><span class="line">             <span class="keyword">break</span>；</span><br><span class="line">        <span class="keyword">default</span> ：</span><br><span class="line">             代码n</span><br><span class="line">             <span class="keyword">break</span>；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-循环结构"><a href="#2-3-循环结构" class="headerlink" title="2.3 循环结构"></a>2.3 循环结构</h3><h4 id="1-while循环"><a href="#1-while循环" class="headerlink" title="1.while循环"></a>1.while循环</h4><p>语法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (循环条件) &#123;</span><br><span class="line">    要重复执行的代码（循环体）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>循环：重复执行某段代码， 而 while : 在…. 期间</p>
+<p>循环的本质就是以某个变量为起始值，然后不断产生变化量，慢慢靠近终止条件的过程。</p>
+<h4 id="2-循环的退出"><a href="#2-循环的退出" class="headerlink" title="2.循环的退出"></a>2.循环的退出</h4><p><strong>continue：结束本次循环，继续下次循环</strong></p>
+<p><strong>break：跳出所在的循环</strong></p>
+<h4 id="3-ATM案例"><a href="#3-ATM案例" class="headerlink" title="3.ATM案例"></a>3.ATM案例</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">        <span class="keyword">let</span> str = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">let</span> money = <span class="number">1000</span></span><br><span class="line">        <span class="keyword">while</span> (str !== <span class="string">&#x27;4&#x27;</span>) &#123;</span><br><span class="line">            str = <span class="title function_">prompt</span>(<span class="string">`</span></span><br><span class="line"><span class="string">            请输入您要进行的操作：</span></span><br><span class="line"><span class="string">            1.存钱</span></span><br><span class="line"><span class="string">            2.取钱</span></span><br><span class="line"><span class="string">            3.查看余额</span></span><br><span class="line"><span class="string">            4.退出</span></span><br><span class="line"><span class="string">        `</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">switch</span> (str) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                    <span class="keyword">let</span> cun = +<span class="title function_">prompt</span>(<span class="string">`请输入您要存的金额：`</span>)</span><br><span class="line">                    money += cun</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">                    <span class="keyword">let</span> qu = +<span class="title function_">prompt</span>(<span class="string">`请输入您要存的金额：`</span>)</span><br><span class="line">                    money -= qu</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;3&#x27;</span>:</span><br><span class="line">                    <span class="title function_">alert</span>(<span class="string">`您的余额是：<span class="subst">$&#123;money&#125;</span>元`</span>)</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Zhang Deshuai</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/06/JavaScript02-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/">http://example.com/2022/08/06/JavaScript02-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/06/JavaScript03-%E5%BE%AA%E7%8E%AF%E5%92%8C%E6%95%B0%E7%BB%84/">JavaScript03-循环和数组</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/04/JavaScript01-%E5%8F%98%E9%87%8F%EF%BC%8C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">JavaScript 基础 - Day1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Zhang Deshuai | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
